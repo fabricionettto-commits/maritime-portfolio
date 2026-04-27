@@ -1,0 +1,841 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Operational Data Center - Operations Analytics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:      #F3F5F8;
+      --paper:   #ffffff;
+      --ink:     #1a2828;
+      --ink2:    #46515F;
+      --teal:    #1D4E89;
+      --teal2:   #2F6690;
+      --teallt:  #E8EEF5;
+      --gold:    #9A7318;
+      --gold2:   #C59A2F;
+      --goldbg:  #fdf8ee;
+      --line:    #D6DBE2;
+      --gray:    #667085;
+      --red:     #A97812;
+      --green:   #3F5F78;
+      --amber:   #a06010;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    /* section */
+    .hero {
+      background: var(--teal);
+      padding: 56px 48px 52px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* subtle grid */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+
+    /* gold bottom rule */
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--gold2), #D9B84F 55%, transparent);
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: end;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.48);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 24px; height: 1px;
+      background: var(--gold2);
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: clamp(32px, 4.5vw, 58px);
+      line-height: 1.06;
+      letter-spacing: -.5px;
+      color: #fff;
+      max-width: 700px;
+    }
+
+    h1 em { font-style: italic; color: var(--gold2); }
+
+    .hero-sub {
+      margin-top: 16px;
+      max-width: 620px;
+      color: rgba(255,255,255,.58);
+      font-size: 15px;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* meeting badge */
+    .meeting-badge {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(185,147,47,.35);
+      border-radius: 6px;
+      padding: 18px 22px;
+      text-align: right;
+      min-width: 200px;
+      flex-shrink: 0;
+    }
+    .meeting-badge .date {
+      font-family: 'DM Mono', monospace;
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--gold2);
+      line-height: 1;
+    }
+    .meeting-badge .label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,.4);
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+    .meeting-badge .who {
+      font-size: 13px;
+      color: rgba(255,255,255,.65);
+      margin-top: 8px;
+    }
+
+    /* section */
+    .stat-bar {
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      box-shadow: 0 2px 16px rgba(1,77,78,.08);
+    }
+
+    .stat-cell {
+      padding: 22px 28px;
+      border-right: 1px solid var(--line);
+      position: relative;
+    }
+    .stat-cell:last-child { border-right: none; }
+    .stat-cell::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--gold2);
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .stat-cell:hover::before { opacity: 1; }
+
+    .stat-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--teal);
+    }
+    .stat-unit {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      color: var(--gold2);
+      margin-left: 3px;
+    }
+    .stat-desc {
+      margin-top: 5px;
+      font-size: 12px;
+      color: var(--gray);
+      line-height: 1.45;
+    }
+
+    /* section */
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    /* section */
+    .message-section { padding: 44px 0 32px; }
+
+    .message-grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 20px;
+    }
+
+    .message-box {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--gold2);
+      border-radius: 0 6px 6px 0;
+      padding: 26px 28px;
+      box-shadow: 0 2px 12px rgba(1,77,78,.06);
+    }
+
+    .message-box h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--teal);
+      margin-bottom: 10px;
+    }
+
+    .message-box p {
+      font-size: 14px;
+      color: var(--ink2);
+      line-height: 1.75;
+    }
+
+    .flow-box {
+      background: var(--teal);
+      border-radius: 6px;
+      padding: 24px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .flow-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.45);
+      margin-bottom: 4px;
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: rgba(255,255,255,.82);
+    }
+
+    .flow-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--gold2);
+      background: rgba(185,147,47,.15);
+      border: 1px solid rgba(185,147,47,.3);
+      border-radius: 50%;
+      width: 24px; height: 24px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* section */
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--teal2);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, var(--line), transparent);
+    }
+
+    /* section */
+    .projects { padding-bottom: 60px; }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 14px;
+    }
+
+    .p-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 12px rgba(1,77,78,.06);
+      transition: box-shadow .2s, transform .2s;
+    }
+    .p-card:hover {
+      box-shadow: 0 8px 28px rgba(1,77,78,.13);
+      transform: translateY(-2px);
+    }
+
+    /* accent stripe */
+    .p-card[data-color="teal"]   { border-top: 3px solid var(--teal2); }
+    .p-card[data-color="gold"]   { border-top: 3px solid var(--gold2); }
+    .p-card[data-color="green"]  { border-top: 3px solid #2563A6; }
+    .p-card[data-color="red"]    { border-top: 3px solid var(--red); }
+    .p-card[data-color="blue"]   { border-top: 3px solid #2563A6; }
+    .p-card[data-color="purple"] { border-top: 3px solid #667085; }
+
+    .p-card-body {
+      padding: 20px 20px 14px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .p-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    .p-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--teal);
+      line-height: 1.25;
+    }
+
+    .p-desc {
+      font-size: 13px;
+      color: var(--ink2);
+      line-height: 1.65;
+      flex: 1;
+    }
+
+    .p-metric {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--gold);
+      background: var(--goldbg);
+      border: 1px solid rgba(185,147,47,.2);
+      border-radius: 2px;
+      padding: 4px 10px;
+    }
+
+    .p-links {
+      padding: 12px 20px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-top: 1px solid var(--line);
+      background: #fafafa;
+    }
+
+    .btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .5px;
+      text-decoration: none;
+      padding: 7px 14px;
+      border-radius: 4px;
+      transition: opacity .15s, transform .15s;
+    }
+    .btn:hover { opacity: .85; transform: translateY(-1px); }
+
+    .btn-primary   { background: var(--teal);  color: #fff; }
+    .btn-secondary { background: #334155;       color: #fff; }
+    .btn-gold      { background: var(--gold2);  color: #fff; }
+    .btn-red       { background: var(--red);    color: #fff; }
+
+    .file-library {
+      margin-top: 28px;
+      padding: 28px;
+      background:
+        linear-gradient(135deg, rgba(1,77,78,.04), rgba(185,147,47,.06)),
+        var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 3px 18px rgba(1,77,78,.07);
+    }
+
+    .file-library-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 20px;
+    }
+
+    .file-library-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--teal);
+      line-height: 1.15;
+    }
+
+    .file-library-note {
+      max-width: 420px;
+      font-size: 12px;
+      color: var(--gray);
+      text-align: right;
+      line-height: 1.55;
+    }
+
+    .file-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .file-group {
+      background: rgba(255,255,255,.72);
+      border: 1px solid rgba(212,222,222,.9);
+      border-radius: 6px;
+      padding: 14px;
+    }
+
+    .file-group h3 {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+
+    .file-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .file-link {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      color: var(--ink2);
+      text-decoration: none;
+      font-size: 12px;
+      line-height: 1.35;
+      padding: 7px 8px;
+      border-radius: 4px;
+      background: #fff;
+      border: 1px solid transparent;
+      transition: border-color .15s, color .15s, transform .15s;
+    }
+
+    .file-link:hover {
+      color: var(--teal);
+      border-color: rgba(185,147,47,.35);
+      transform: translateX(2px);
+    }
+
+    .file-type {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      color: var(--gray);
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    /* section */
+    footer {
+      background: var(--teal);
+      border-top: 4px solid var(--gold2);
+      padding: 22px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-left {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      color: rgba(255,255,255,.85);
+    }
+
+    .footer-right {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: rgba(255,255,255,.35);
+      letter-spacing: 1px;
+      text-align: right;
+    }
+
+    /* section */
+    @media (max-width: 1000px) {
+      .project-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero-inner   { grid-template-columns: 1fr; }
+      .meeting-badge { text-align: left; }
+    }
+    @media (max-width: 680px) {
+      .wrap, footer { padding-left: 20px; padding-right: 20px; }
+      .hero { padding: 40px 20px 44px; }
+      .stat-bar  { grid-template-columns: repeat(2,1fr); }
+      .message-grid { grid-template-columns: 1fr; }
+      .project-grid { grid-template-columns: 1fr; }
+      .file-library { padding: 20px; }
+      .file-library-head { display: block; }
+      .file-library-note { margin-top: 8px; text-align: left; }
+      .file-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 10px; text-align: center; }
+      .footer-right { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- section -->
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <p class="hero-eyebrow">Operations Analytics - Data Intelligence</p>
+      <h1>Operational Data Center<br><em>Showcase</em></h1>
+      <p class="hero-sub">
+        How scattered files and manual vessel checks became a centralized intelligence layer -
+        with automation, daily dashboards and governance built by the operations team in Regional Operations.
+      </p>
+    </div>
+    <div class="meeting-badge">
+      <div class="date">29 APR<br>2026</div>
+      <div class="label">Meeting date</div>
+      <div class="who">External Review Team<br>+ Operations Analytics</div>
+    </div>
+  </div>
+</header>
+
+<!-- section -->
+<div class="stat-bar">
+  <div class="stat-cell">
+    <div><span class="stat-val">9</span></div>
+    <div class="stat-desc">operational tools running in production - commercial, planning, operations, customer service and governance</div>
+  </div>
+  <div class="stat-cell">
+    <div><span class="stat-val">20</span><span class="stat-unit">min</span></div>
+    <div class="stat-desc">full vessel analysis from raw system export to decision-ready report - previously 2 to 4 hours of manual work</div>
+  </div>
+  <div class="stat-cell">
+    <div><span class="stat-val">950</span><span class="stat-unit">moves</span></div>
+    <div class="stat-desc">discharge and load analyzed per vessel cycle, covering TEUs, tons, plugs, type mix and port breakdown</div>
+  </div>
+  <div class="stat-cell">
+    <div><span class="stat-val">Daily</span></div>
+    <div class="stat-desc">automated refresh - gate-in, booking board, capacity and Telegram distribution running without manual steps</div>
+  </div>
+</div>
+
+<!-- section -->
+<div class="wrap">
+  <div class="message-section">
+    <div class="section-label">Context</div>
+    <div class="message-grid">
+      <div class="message-box">
+        <h2>What this demonstrates</h2>
+        <p>
+          The data already existed. The decisions were already being made. What was missing was a consistent layer
+          between raw system exports and the people who needed to act on them. Every tool shown here was built
+          directly from operational necessity - not as a project, but as a response to a real daily problem.
+          The result is a data operation that runs with fewer manual steps, fewer errors and faster alignment
+          across commercial, planning and documentation.
+        </p>
+      </div>
+      <div class="flow-box">
+        <div class="flow-label">How the pipeline works</div>
+        <div class="flow-step"><div class="flow-num">1</div>Standardized inputs from the operational system</div>
+        <div class="flow-step"><div class="flow-num">2</div>Python processing - bookings, moves, BAPLIE, discharge</div>
+        <div class="flow-step"><div class="flow-num">3</div>HTML dashboards delivered for daily decisions</div>
+        <div class="flow-step"><div class="flow-num">4</div>Telegram distribution + Knowledge Hub governance</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- section -->
+  <div class="projects">
+    <div class="section-label">Projects</div>
+    <div class="project-grid">
+
+      <div class="p-card" data-color="teal">
+        <div class="p-card-body">
+          <div class="p-tag">Commercial - Operations</div>
+          <div class="p-title">Booking Control Board</div>
+          <div class="p-desc">
+            Complete booking visibility by vessel - container mix, over/under status, port breakdown,
+            customer performance, deadlines and pending cargo. Replaced a full morning of manual checks
+            with a single script run used by all departments and overseas offices.
+          </div>
+          <span class="p-metric">4 hrs -> 20 min - daily - 6 departments</span>
+        </div>
+        <div class="p-links">
+          <a class="btn btn-primary" href="02_Booking_Control_Board/Booking_Board_Demo_Service.html">Open dashboard</a>
+        </div>
+      </div>
+
+      <div class="p-card" data-color="gold">
+        <div class="p-card-body">
+          <div class="p-tag">Planning</div>
+          <div class="p-title">Capacity &amp; Shortfall</div>
+          <div class="p-desc">
+            Compares commercial forecast against closed bookings - TEU, weight, plugs, shortfall by port and type.
+            Prevented an unnecessary rotation change by exposing discharge concentration risk before the decision
+            was made. Strongest management decision-making tool in the suite.
+          </div>
+          <span class="p-metric">2h 30 -> 20 min - 950 moves per vessel</span>
+        </div>
+        <div class="p-links">
+          <a class="btn btn-primary"   href="03_Capacity_Shortfall/Mercury_Shortfall_Dashboard.html">Shortfall</a>
+          <a class="btn btn-secondary" href="03_Capacity_Shortfall/Mercury_Booking_Capacity.html">Booking / Capacity</a>
+          <a class="btn btn-secondary" href="03_Capacity_Shortfall/Mercury_Comparison_Dashboard.html">Comparison</a>
+        </div>
+      </div>
+
+      <div class="p-card" data-color="green">
+        <div class="p-card-body">
+          <div class="p-tag">Daily Operations</div>
+          <div class="p-title">Gate-In, Discharge &amp; Load</div>
+          <div class="p-desc">
+            Daily automation showing real vessel status through end of deadline - gate-in progress vs. booked,
+            load confrontation and pre-calculated discharge. Eliminated four repeated manual steps per vessel
+            per day across customer service and operations.
+          </div>
+          <span class="p-metric">Automated daily - zero manual feed</span>
+        </div>
+        <div class="p-links">
+          <a class="btn btn-primary"   href="04_Gate_Discharge_Load_Operations/Mercury_GateIn.html">Gate-In</a>
+          <a class="btn btn-secondary" href="04_Gate_Discharge_Load_Operations/Venus_Discharge_x_Load.html">Discharge x Load</a>
+        </div>
+      </div>
+
+      <div class="p-card" data-color="blue">
+        <div class="p-card-body">
+          <div class="p-tag">Productivity - Cost</div>
+          <div class="p-title">Final Moves / All Ports</div>
+          <div class="p-desc">
+            Final movement visibility by port, supporting productivity analysis, cost discussions and
+            operational planning across the full rotation. Connects move data to port-level performance
+            for management review.
+          </div>
+          <span class="p-metric">Full rotation - port-level breakdown</span>
+        </div>
+        <div class="p-links">
+          <a class="btn btn-primary"   href="05_Final_Moves_All_Ports/Mercury_Final_Moves.html">Final Moves</a>
+          <a class="btn btn-secondary" href="05_Final_Moves_All_Ports/Mercury_Moves_All_Ports.html">All Ports</a>
+        </div>
+      </div>
+
+      <div class="p-card" data-color="red">
+        <div class="p-card-body">
+          <div class="p-tag">Technical Visualization</div>
+          <div class="p-title">BAPLIE / Bayplan 3D Viewer</div>
+          <div class="p-desc">
+            Reads BAPLIE EDI and Excel load lists and renders the full stowage plan in 3D - with filters
+            by bay, port, status, size and type. Replaced heavy, slow spreadsheet navigation with instant
+            container-level inspection. Started as a prototype, became a recurring daily tool.
+          </div>
+          <span class="p-metric">EDI -> visual in seconds - 3D interaction</span>
+        </div>
+        <div class="p-links">
+          <a class="btn btn-red" href="06_BAPLIE_Bayplan_3D/BAPLIE_Bayplan_Viewer_3D.html">Open 3D viewer</a>
+        </div>
+      </div>
+
+      <div class="p-card" data-color="teal">
+        <div class="p-card-body">
+          <div class="p-tag">Distribution</div>
+          <div class="p-title">Telegram Bot</div>
+          <div class="p-desc">
+            Automated delivery of operational reports, vessel schedules and updates directly to teams
+            via Telegram. Turns dashboards into a daily routine - no manual send, no missed updates,
+            no dependency on someone opening a file.
+          </div>
+          <span class="p-metric">Automated delivery - daily routine</span>
+        </div>
+        <div class="p-links">
+          <a class="btn btn-primary"   href="10_Telegram_Bot/TELEGRAM_BOT_PROJECT.md">Project summary</a>
+          <a class="btn btn-secondary" href="10_Telegram_Bot/bot_telegram_maritimo.py">Bot script</a>
+          <a class="btn btn-secondary" href="10_Telegram_Bot/Demo_Service_Schedule.html">Schedule example</a>
+        </div>
+      </div>
+
+      <div class="p-card" data-color="gold">
+        <div class="p-card-body">
+          <div class="p-tag">Governance</div>
+          <div class="p-title">Operational Knowledge Hub</div>
+          <div class="p-desc">
+            Central repository for all scripts, dashboards, manuals, vessel rules and decision history.
+            Every file has a corresponding note with context and traceability. Built so any manager
+            can understand what exists, why it was built and how to use it.
+          </div>
+          <span class="p-metric">47 files indexed - full traceability</span>
+        </div>
+        <div class="p-links">
+          <a class="btn btn-primary"   href="01_Data_Center_Knowledge_Hub/Operational_Knowledge_Hub.md">Knowledge Hub</a>
+          <a class="btn btn-secondary" href="01_Data_Center_Knowledge_Hub/13_Operational_Vessels.md">Vessel structure</a>
+        </div>
+      </div>
+
+      <div class="p-card" data-color="green">
+        <div class="p-card-body">
+          <div class="p-tag">Automation</div>
+          <div class="p-title">Scripts &amp; Sample Data</div>
+          <div class="p-desc">
+            The repeatable foundation behind every dashboard - Python scripts, standardized input files
+            and processed output bases ready to be scaled into a full data pipeline. This is what makes
+            the operation reproducible and transferable.
+          </div>
+          <span class="p-metric">Python - repeatable - pipeline-ready</span>
+        </div>
+        <div class="p-links">
+          <a class="btn btn-primary"   href="08_Automation_Scripts/">Scripts</a>
+          <a class="btn btn-secondary" href="09_Sample_Data/">Sample data</a>
+        </div>
+      </div>
+
+    </div><!-- /project-grid -->
+
+    <div class="file-library">
+      <div class="file-library-head">
+        <div>
+          <div class="section-label">Direct Access</div>
+          <div class="file-library-title">Complete File Library</div>
+        </div>
+        <div class="file-library-note">
+          Same working links as the main opening page, expanded with the support files, scripts and sample data used to build the showcase.
+        </div>
+      </div>
+
+      <div class="file-grid">
+        <div class="file-group">
+          <h3>Open First</h3>
+          <div class="file-list">
+            <a class="file-link" href="00_Open_First/EXECUTIVE_SUMMARY.md"><span>Executive Summary</span><span class="file-type">MD</span></a>
+            <a class="file-link" href="00_Open_First/MEETING_SCRIPT.md"><span>Meeting Script</span><span class="file-type">MD</span></a>
+          </div>
+        </div>
+
+        <div class="file-group">
+          <h3>Knowledge Hub</h3>
+          <div class="file-list">
+            <a class="file-link" href="01_Data_Center_Knowledge_Hub/Operational_Knowledge_Hub.md"><span>Operational Knowledge Hub</span><span class="file-type">MD</span></a>
+            <a class="file-link" href="01_Data_Center_Knowledge_Hub/13_Operational_Vessels.md"><span>Operational Vessels</span><span class="file-type">MD</span></a>
+            <a class="file-link" href="01_Data_Center_Knowledge_Hub/Capacity_Planning_Manual_Summary.md"><span>Capacity Planning Manual</span><span class="file-type">MD</span></a>
+          </div>
+        </div>
+
+        <div class="file-group">
+          <h3>Dashboards</h3>
+          <div class="file-list">
+            <a class="file-link" href="02_Booking_Control_Board/Booking_Board_Demo_Service.html"><span>Booking Board demo service</span><span class="file-type">HTML</span></a>
+            <a class="file-link" href="03_Capacity_Shortfall/Mercury_Shortfall_Dashboard.html"><span>Mercury Shortfall</span><span class="file-type">HTML</span></a>
+            <a class="file-link" href="03_Capacity_Shortfall/Mercury_Booking_Capacity.html"><span>Booking / Capacity</span><span class="file-type">HTML</span></a>
+            <a class="file-link" href="03_Capacity_Shortfall/Mercury_Comparison_Dashboard.html"><span>Comparison Dashboard</span><span class="file-type">HTML</span></a>
+          </div>
+        </div>
+
+        <div class="file-group">
+          <h3>Operations</h3>
+          <div class="file-list">
+            <a class="file-link" href="04_Gate_Discharge_Load_Operations/Mercury_GateIn.html"><span>Mercury Gate-In</span><span class="file-type">HTML</span></a>
+            <a class="file-link" href="04_Gate_Discharge_Load_Operations/Venus_Discharge_x_Load.html"><span>Venus Discharge x Load</span><span class="file-type">HTML</span></a>
+            <a class="file-link" href="05_Final_Moves_All_Ports/Mercury_Final_Moves.html"><span>Mercury Final Moves</span><span class="file-type">HTML</span></a>
+            <a class="file-link" href="05_Final_Moves_All_Ports/Mercury_Moves_All_Ports.html"><span>Mercury Moves All Ports</span><span class="file-type">HTML</span></a>
+          </div>
+        </div>
+
+        <div class="file-group">
+          <h3>Visualization</h3>
+          <div class="file-list">
+            <a class="file-link" href="06_BAPLIE_Bayplan_3D/BAPLIE_Bayplan_Viewer_3D.html"><span>BAPLIE Bayplan 3D Viewer</span><span class="file-type">HTML</span></a>
+          </div>
+        </div>
+
+        <div class="file-group">
+          <h3>Automation</h3>
+          <div class="file-list">
+            <a class="file-link" href="08_Automation_Scripts/Comparison_Dashboard_Mercury.py"><span>Comparison Dashboard Script</span><span class="file-type">PY</span></a>
+            <a class="file-link" href="08_Automation_Scripts/Final_Moves_Mercury.py"><span>Final Moves Script</span><span class="file-type">PY</span></a>
+            <a class="file-link" href="08_Automation_Scripts/generate_knowledge_hub_inventory.py"><span>Knowledge Hub Inventory Script</span><span class="file-type">PY</span></a>
+          </div>
+        </div>
+
+        <div class="file-group">
+          <h3>Sample Data</h3>
+          <div class="file-list">
+            <a class="file-link" href="09_Sample_Data/Baplie_Mercury_Voyage_1.xlsx"><span>Baplie MERCURY / VOYAGE 1</span><span class="file-type">XLSX</span></a>
+            <a class="file-link" href="09_Sample_Data/Discharge_Neptune_Voyage_3.xlsx"><span>Discharge NEPTUNE / VOYAGE 3</span><span class="file-type">XLSX</span></a>
+            <a class="file-link" href="09_Sample_Data/Mercury_Voyage_1_Moves_All_Ports.xlsx"><span>Mercury Moves All Ports</span><span class="file-type">XLSX</span></a>
+            <a class="file-link" href="09_Sample_Data/Type_Matriz.xlsx"><span>Type Matriz</span><span class="file-type">XLSX</span></a>
+          </div>
+        </div>
+
+        <div class="file-group">
+          <h3>Telegram Bot</h3>
+          <div class="file-list">
+            <a class="file-link" href="10_Telegram_Bot/TELEGRAM_BOT_PROJECT.md"><span>Project Summary</span><span class="file-type">MD</span></a>
+            <a class="file-link" href="10_Telegram_Bot/Telegram_Bot_Project_Summary.md"><span>Bot Project Summary</span><span class="file-type">MD</span></a>
+            <a class="file-link" href="10_Telegram_Bot/Telegram_Bot_Prompt_EN.md"><span>Bot Prompt EN</span><span class="file-type">MD</span></a>
+            <a class="file-link" href="10_Telegram_Bot/Demo_Service_Schedule.html"><span>demo service Schedule</span><span class="file-type">HTML</span></a>
+            <a class="file-link" href="10_Telegram_Bot/bot_telegram_maritimo.py"><span>Maritime Telegram Bot</span><span class="file-type">PY</span></a>
+            <a class="file-link" href="10_Telegram_Bot/config.py"><span>Bot Config</span><span class="file-type">PY</span></a>
+            <a class="file-link" href="10_Telegram_Bot/requirements.txt"><span>Requirements</span><span class="file-type">TXT</span></a>
+            <a class="file-link" href="10_Telegram_Bot/run_bot.bat"><span>Run Bot</span><span class="file-type">BAT</span></a>
+            <a class="file-link" href="10_Telegram_Bot/vessel_operation_base.json"><span>Vessel Operation Base</span><span class="file-type">JSON</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /projects -->
+</div><!-- /wrap -->
+
+<!-- section -->
+<footer>
+  <div class="footer-left">Operations Analytics Team</div>
+  <div class="footer-right">Prepared for meeting with External Review Team - 29 April 2026<br>All data is operational and anonymized for this presentation</div>
+</footer>
+
+</body>
+</html>
+
+
+
+
+

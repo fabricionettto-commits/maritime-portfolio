@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Booking Board ¬- Demo Service</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+:root {
+    --teal: #1D4E89;
+    --gold: #C59A2F;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 12px;
+    background: #f0f2f5;
+    color: #333;
+}
+.main-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 15px 20px 40px;
+}
+
+/* section */
+.header-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: linear-gradient(135deg, #1D4E89 0%, #2F6690 100%);
+    padding: 12px 18px;
+    border-radius: 10px;
+    border-bottom: 4px solid var(--gold);
+    margin-bottom: 18px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+}
+.logo-box {
+    background: var(--teal);
+    padding:4px;
+    border-radius: 8px;
+    border: 2px solid var(--gold);
+    flex-shrink: 0;
+}
+.logo-box img { height:34px; display: block; }
+.header-title {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+}
+.header-sub {
+    color: var(--gold);
+    font-size: 10px;
+    font-weight: 700;
+}
+.header-badge {
+    margin-left: auto;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid var(--gold);
+    border-radius: 6px;
+    padding: 6px 14px;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.5;
+}
+.header-badge .badge-val {
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--gold);
+}
+
+.booking-board-section {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfb 100%);
+    border: 1px solid rgba(1,77,78,0.12);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 18px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+.section-title {
+    font-size: 15px;
+    font-weight: 900;
+    color: #1D4E89;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+.booking-board-section .section-intro {
+    color: #495d63;
+    font-size: 11px;
+    margin-bottom: 14px;
+    line-height: 1.45;
+}
+
+.logistics-banner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #1F2937;
+    color: #fff;
+    border: 1px solid rgba(185,147,47,0.42);
+    border-left: 6px solid var(--gold);
+    border-radius: 0;
+    padding: 18px 22px;
+    margin-bottom: 18px;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+}
+.logistics-icon {
+    width: 64px;
+    height: 64px;
+    min-width: 64px;
+    background: #111827;
+    border: 2px solid var(--gold);
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+}
+.logistics-icon svg {
+    width: 44px;
+    height: 44px;
+    fill: none;
+    stroke: #f2d37b;
+    stroke-width: 2.6;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+    animation: logistics-ship-sail 4.8s ease-in-out infinite;
+}
+.logistics-icon .ship-hull {
+    fill: rgba(242,211,123,0.14);
+    stroke: #f2d37b;
+}
+.logistics-icon .ship-bridge {
+    fill: rgba(255,255,255,0.10);
+    stroke: #ffffff;
+}
+.logistics-icon .ship-window {
+    stroke: #f2d37b;
+    stroke-width: 2.2;
+}
+.logistics-icon .ship-container {
+    stroke-width: 2.2;
+}
+.logistics-icon .c1,
+.logistics-icon .c4 {
+    fill: rgba(242,211,123,0.22);
+    stroke: #f2d37b;
+}
+.logistics-icon .c2,
+.logistics-icon .c3 {
+    fill: rgba(255,255,255,0.10);
+    stroke: #ffffff;
+}
+.logistics-icon .ship-wave {
+    stroke: rgba(255,255,255,0.82);
+    stroke-width: 2.4;
+}
+@keyframes logistics-ship-sail {
+    0%, 100% {
+        transform: translateX(-12px);
+    }
+    50% {
+        transform: translateX(12px);
+    }
+}
+.logistics-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+.logistics-title {
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 0.3px;
+    line-height: 1.1;
+}
+.logistics-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.76);
+    max-width: 620px;
+    line-height: 1.45;
+}
+.logistics-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+.app-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    padding: 8px 12px;
+    border: 1px solid rgba(185,147,47,0.75);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.10);
+    color: #fff;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+}
+.app-link:hover {
+    color: #fff;
+    border-color: #f2d37b;
+    background: rgba(255,255,255,0.16);
+}
+@media (max-width: 640px) {
+    .logistics-banner {
+        gap: 12px;
+        padding: 14px 16px;
+        flex-wrap: wrap;
+    }
+    .logistics-icon {
+        width: 56px;
+        height: 56px;
+        min-width: 56px;
+    }
+    .logistics-icon svg {
+        width: 38px;
+        height: 38px;
+    }
+    .logistics-title {
+        font-size: 15px;
+    }
+    .logistics-sub {
+        font-size: 11px;
+    }
+    .logistics-actions {
+        width: 100%;
+        margin-left: 0;
+        justify-content: flex-start;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .logistics-icon svg {
+        animation: none;
+    }
+}
+
+/* section */
+.vessel-card {
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 18px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: box-shadow 0.2s;
+}
+.vessel-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+.vessel-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(90deg, #1D4E89 0%, #2F6690 100%);
+    padding: 10px 16px;
+    border-bottom: 3px solid var(--gold);
+}
+.vessel-name-block { flex: 1; }
+.vessel-name {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+}
+.vessel-meta {
+    color: var(--gold);
+    font-size: 10px;
+    font-weight: 700;
+    margin-top: 2px;
+}
+.vessel-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+.open-vessel-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    padding: 7px 12px;
+    border: 1px solid var(--gold);
+    border-radius: 6px;
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+}
+.open-vessel-btn:hover {
+    color: #fff;
+    background: var(--gold);
+    border-color: #f2d37b;
+}
+
+/* section */
+.cap-widget {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(185,147,47,0.5);
+    border-radius: 6px;
+    padding: 6px 12px;
+    min-width: 185px;
+    flex-shrink: 0;
+}
+.cap-title {
+    color: #fff;
+    font-size: 9px;
+    font-weight: 900;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding-bottom: 3px;
+    margin-bottom: 3px;
+    letter-spacing: 1px;
+}
+.cap-row {
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+.cap-pct {
+    color: var(--gold);
+    font-weight: 900;
+}
+
+/* section */
+.table-custom {
+    width: 100% !important;
+    border-collapse: collapse;
+    margin: 0;
+}
+.table-custom thead th {
+    background: var(--teal) !important;
+    color: #fff !important;
+    font-weight: 900;
+    font-size: 11px;
+    padding: 5px 6px;
+    border: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+}
+.table-custom tbody td {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1D4E89;
+    padding: 4px 6px;
+    border: 1px solid #dee2e6;
+    line-height: 1.1;
+    vertical-align: middle;
+    text-align: center;
+}
+.table-custom tbody tr:nth-of-type(odd):not(.row-total) td {
+    background-color: #ffffff !important;
+}
+.table-custom tbody tr:nth-of-type(even):not(.row-total) td {
+    background-color: #f6fbfb !important;
+}
+
+.table-custom tbody tr:not(.row-total):hover td {
+    background-color: rgba(1,77,78,0.08) !important;
+    cursor: pointer;
+}
+.table-custom tbody td {
+    transition: background-color 0.2s ease;
+}
+.table-custom tbody tr.row-total td {
+    background-color: var(--gold) !important;
+    color: #ffffff !important;
+    font-weight: 900 !important;
+    font-size: 13px !important;
+    border: none !important;
+    border-top: 3px solid var(--teal) !important;
+    padding: 6px 8px !important;
+    letter-spacing: 0.3px;
+}
+.table-custom tbody tr.row-total:hover td {
+    background-color: #2f4f4f !important;
+    color: #ffffff !important;
+    cursor: pointer;
+}
+
+@keyframes flash-yellow {
+    0%   { background-color: #ffffff !important; }
+    100% { background-color: #ffffd1 !important; }
+}
+@keyframes flash-green {
+    0%   { background-color: #f2f2f2 !important; }
+    100% { background-color: #D9E2EC !important; }
+}
+
+/* section */
+.footer {
+    text-align: center;
+    color: #999;
+    font-size: 9px;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+}
+
+/* section */
+td.zero-val {
+    color: #ccc !important;
+}
+
+/* section */
+.st-open {
+    background: #2563A6;
+    color: #fff;
+    font-size: 7px;
+    font-weight: 900;
+    padding: 1px 4px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+}
+.st-attention {
+    background: #f39c12;
+    color: #fff;
+    font-size: 7px;
+    font-weight: 900;
+    padding: 1px 4px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+}
+.st-over {
+    background: #e74c3c;
+    color: #fff;
+    font-size: 7px;
+    font-weight: 900;
+    padding: 1px 4px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+    animation: pulse-over 1s infinite alternate;
+}
+@keyframes pulse-over {
+    0%   { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+/* Print */
+@media print {
+    body { background: #fff; }
+    .vessel-card { break-inside: avoid; page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+    <div class="logistics-banner">
+        <div class="logistics-icon" aria-hidden="true">
+            <svg viewBox="0 0 64 64" role="img" focusable="false">
+                <path class="ship-hull" d="M9 35h36l5 5h6l-8 11H20L9 35Z" />
+                <path class="ship-deck" d="M15 31h35" />
+                <path class="ship-bridge" d="M39 17h10v14H39V17Z" />
+                <path class="ship-bridge" d="M43 12h10v5H43v-5Z" />
+                <path class="ship-window" d="M43 22h2" />
+                <path class="ship-window" d="M48 22h2" />
+                <path class="ship-container c1" d="M16 22h8v9h-8v-9Z" />
+                <path class="ship-container c2" d="M25 22h8v9h-8v-9Z" />
+                <path class="ship-container c3" d="M21 12h8v9h-8v-9Z" />
+                <path class="ship-container c4" d="M30 12h8v9h-8v-9Z" />
+                <path class="ship-wave" d="M13 55c4-2 8-2 12 0s8 2 12 0 8-2 12 0" />
+            </svg>
+        </div>
+        <div class="logistics-copy">
+            <div class="logistics-title">Operations Hub</div>
+            <div class="logistics-sub">Central view of demo vessels, berth planning, and booked capacity.</div>
+        </div>
+        <nav class="logistics-actions" aria-label="Navigation principal">
+            <a class="app-link" href="/navios">Open vessel reports</a>
+            <a class="app-link" href="/logout">Sign out</a>
+        </nav>
+    </div>
+    
+<div class="main-container">
+
+    <!-- HEADER -->
+
+    <div class="header-bar">
+        <div class="logo-box" style="background:#174A7C; border:2px solid #C59A2F; border-radius:8px; padding:4px; display:inline-flex; align-items:center; justify-content:center;"><img src="../assets/grow_serve_logo.png" style="height: 34px;"></div>
+        <div>
+            <div class="header-title">Operations Hub - Booking Board</div>
+            <div class="header-sub">Generated: 26/04/2026 23:00</div>
+        </div>
+        <div class="header-badge">
+            <div>VESSELS</div>
+            <div class="badge-val">4</div>
+        </div>
+    </div>
+
+    <!-- BOOKING BOARD HEADER -->
+    
+    <div class="booking-board-section">
+        <div class="section-title">Booking Board (USNYC arrival order)</div>
+        <div class="section-intro">Structured vessel, units, and ETA delivery summary.</div>
+        <div class="table-responsive">
+            <table class="table table-sm table-custom text-center mb-0">
+                <thead>
+                    
+        
+                </thead>
+                <tbody>
+                    <tr>
+            <td style="font-weight:900;">USNYC</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+            <td style="font-weight:900;">0</td>
+            <td>0</td>
+            <td>0</td>
+        </tr><tr>
+            <td style="font-weight:900;">USNFK</td>
+            <td>1</td><td>0</td><td>6</td><td>0</td><td>0</td>
+            <td style="font-weight:900;">7</td>
+            <td>13</td>
+            <td>214</td>
+        </tr><tr>
+            <td style="font-weight:900;">USMIA</td>
+            <td>4</td><td>15</td><td>18</td><td>0</td><td>0</td>
+            <td style="font-weight:900;">37</td>
+            <td>70</td>
+            <td>1.155</td>
+        </tr>
+                    <tr class="row-total">
+        <td>TOTAL</td>
+        <td>5</td><td>15</td><td>24</td><td>0</td><td>0</td>
+        <td>44</td>
+        <td>83</td>
+        <td>1.369</td>
+    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="vessel-card">
+        <div class="vessel-header">
+            <div class="vessel-name-block">
+                <div class="vessel-name">NEPTUNE / VOYAGE 3</div>
+                <div class="vessel-meta"><span style="margin-right:10px;">ETA USNYC 26/04/2026</span> <span style="margin-right:10px;">ETA USHOU 26/04/2026</span> <span style="margin-right:10px;">ETA USNFK 26/04/2026</span>  </div>
+            </div>
+            <div class="vessel-actions">
+                <a class="open-vessel-btn" href="/#">Open vessel reports</a>
+            </div>
+            
+    <div class="cap-widget">
+        <div class="cap-title">VESSEL CAPACITY</div>
+        <div class="cap-row"><span>Units:</span><span>326 / 662 <span class="cap-pct">(49.2%)</span> <span class="st-open">OPEN</span></span></div>
+        <div class="cap-row"><span>TEUs:</span><span>600 / 1.060 <span class="cap-pct">(56.6%)</span> <span class="st-open">OPEN</span></span></div>
+        <div class="cap-row"><span>Tons:</span><span>9.900 / 14.200 <span class="cap-pct">(69.7%)</span> <span class="st-open">OPEN</span></span></div>
+        <div class="cap-row"><span>Plugs:</span><span>195 / 285 <span class="cap-pct">(68.4%)</span> <span class="st-open">OPEN</span></span></div>
+    </div>
+    
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm table-custom text-center mb-0">
+                <thead>
+                    <tr>
+                        <th>POL</th>
+                        <th>DC20</th><th>HC40</th><th>RH40</th><th>FR40</th><th>OT40</th>
+                        <th>Units</th>
+                        <th>TEUs</th>
+                        <th>Tons</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+            <td style="font-weight:900;">USNYC</td>
+            <td>17</td><td>0</td><td>31</td><td>0</td><td>0</td>
+            <td style="font-weight:900;">48</td>
+            <td>79</td>
+            <td>1.304</td>
+        </tr><tr>
+            <td style="font-weight:900;">USHOU</td>
+            <td>0</td><td>3</td><td>27</td><td>0</td><td>0</td>
+            <td style="font-weight:900;">30</td>
+            <td>60</td>
+            <td>990</td>
+        </tr><tr>
+            <td style="font-weight:900;">USMIA</td>
+            <td>15</td><td>12</td><td>5</td><td>0</td><td>0</td>
+            <td style="font-weight:900;">32</td>
+            <td>49</td>
+            <td>808</td>
+        </tr><tr>
+            <td style="font-weight:900;">USNFK</td>
+            <td>20</td><td>64</td><td>132</td><td>0</td><td>0</td>
+            <td style="font-weight:900;">216</td>
+            <td>412</td>
+            <td>6.798</td>
+        </tr>
+                    <tr class="row-total">
+        <td>TOTAL</td>
+        <td>52</td><td>79</td><td>195</td><td>0</td><td>0</td>
+        <td>326</td>
+        <td>600</td>
+        <td>9.900</td>
+    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+
+    <div class="footer">
+        Portfolio Logistics - Capacity Planning - Demo Service Booking Board - 26/04/2026 23:00
+    </div>
+</div>
+
+<script>
+// Highlight zero-value cells
+document.querySelectorAll('.table-custom tbody td').forEach(td => {
+    if (td.textContent.trim() === '0' && !td.closest('.row-total')) {
+        td.classList.add('zero-val');
+    }
+});
+</script>
+</body>
+</html>
+
+
+
+
+

@@ -1,0 +1,156 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Operational Data Center Showcase</title>
+  <style>
+    :root { --ink:#17202a; --muted:#5b6673; --line:#D6DBE2; --soft:#f5f7fa; --brand:#174A7C; --accent:#A97812; --gold:#A97812; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; }
+    header { padding:18px 22px 28px; border-bottom:1px solid var(--line); background:#F7F8FA; position:relative; min-height:130px; }
+    h1 { margin:0 0 10px; font-size:30px; letter-spacing:0; }
+    .brand-badge { position:absolute; top:16px; left:18px; width:60px; height:46px; display:flex; align-items:center; justify-content:center; background:#1F2937; border:2px solid #C59A2F; border-radius:7px; padding:3px; overflow:hidden; box-shadow:0 1px 2px rgba(0,0,0,.10); }
+    .brand-badge img { width:118%; height:118%; object-fit:contain; object-position:center center; display:block; mix-blend-mode:screen; transform:translate(0, 0) scale(1.18); transform-origin:center center; }
+    .hero-copy { padding-left:78px; padding-top:0; max-width:1080px; }
+    @media (max-width: 720px) { header { padding:76px 20px 22px; } .brand-badge { top:16px; left:20px; } .hero-copy { padding-left:0; } h1 { font-size:26px; } }
+    .subtitle { max-width:1040px; color:var(--muted); font-size:16px; line-height:1.45; }
+    main { padding:28px 42px 42px; }
+    .panel { border:1px solid var(--line); border-radius:8px; padding:18px; margin-bottom:22px; background:#fff; }
+    .panel h2 { margin:0 0 8px; font-size:18px; }
+    .panel p { margin:0; color:var(--muted); line-height:1.45; }
+    .flow { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; margin-top:14px; }
+    .step { background:var(--soft); border:1px solid var(--line); border-radius:8px; padding:12px; font-size:13px; color:var(--muted); }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px; }
+    .card { border:1px solid var(--line); border-radius:8px; padding:16px; min-height:196px; display:flex; flex-direction:column; gap:10px; background:#fff; }
+    .card strong { font-size:16px; }
+    .tag { width:fit-content; border:1px solid var(--line); border-radius:999px; padding:3px 9px; font-size:12px; color:var(--muted); background:var(--soft); }
+    .card p { margin:0; color:var(--muted); line-height:1.4; flex:1; }
+    .links { display:flex; flex-wrap:wrap; gap:8px; }
+    a.button { color:#fff; background:var(--brand); text-decoration:none; border-radius:6px; padding:8px 10px; font-size:13px; font-weight:700; }
+    a.secondary { background:#334155; }
+    a.warn { background:var(--gold); }
+    a.accent { background:var(--accent); }
+    footer { padding:16px 42px 34px; color:var(--muted); font-size:12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand-badge"><img src="assets/grow_serve_logo.png" alt="Anonymous logistics logo"></div>
+    <div class="hero-copy">
+      <h1>Operational Data Center Showcase</h1>
+      <div class="subtitle">
+        A focused selection of high-impact operational projects showing how scattered files, manual checks and vessel-level reports can evolve into a centralized data layer with automation, governance and distribution.
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>Meeting Message</h2>
+      <p>The data already exists. The scripts already transform it. The dashboards already support decisions. The next step is to centralize the data layer, standardize refreshes and reduce manual dependency.</p>
+      <div class="flow">
+        <div class="step">1. Standardized operational inputs</div>
+        <div class="step">2. Python processing for bookings, moves, BAPLIE and discharge</div>
+        <div class="step">3. HTML dashboards for daily decisions</div>
+        <div class="step">4. Knowledge Hub and Telegram distribution</div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <span class="tag">Commercial + Operations</span>
+        <strong>Booking Control Board</strong>
+        <p>Consolidated booking visibility by vessel, supporting fast decisions on overbooking, underutilization and commercial follow-up.</p>
+        <div class="links"><a class="button" href="02_Booking_Control_Board/Booking_Board_Demo_Service.html">Open dashboard</a></div>
+      </article>
+
+      <article class="card">
+        <span class="tag">Planning</span>
+        <strong>Capacity & Shortfall</strong>
+        <p>Compares booking, capacity, TEU, weight and shortfall indicators. This is one of the strongest examples for management decision-making.</p>
+        <div class="links">
+          <a class="button" href="03_Capacity_Shortfall/Mercury_Shortfall_Dashboard.html">Shortfall dashboard</a>
+          <a class="secondary button" href="03_Capacity_Shortfall/Mercury_Booking_Capacity.html">Booking / Capacity</a>
+          <a class="secondary button" href="03_Capacity_Shortfall/Mercury_Comparison_Dashboard.html">Comparison</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <span class="tag">Daily Operations</span>
+        <strong>Gate-In, Discharge & Load</strong>
+        <p>Shows the real operational status and reduces repeated manual checks across gate, discharge and load reports.</p>
+        <div class="links">
+          <a class="button" href="04_Gate_Discharge_Load_Operations/Mercury_GateIn.html">Gate-In</a>
+          <a class="secondary button" href="04_Gate_Discharge_Load_Operations/Venus_Discharge_x_Load.html">Discharge x Load</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <span class="tag">Productivity + Cost</span>
+        <strong>Final Moves / All Ports</strong>
+        <p>Final movement visibility by port, supporting productivity analysis, cost discussions and operational planning.</p>
+        <div class="links">
+          <a class="button" href="05_Final_Moves_All_Ports/Mercury_Final_Moves.html">Final Moves</a>
+          <a class="secondary button" href="05_Final_Moves_All_Ports/Mercury_Moves_All_Ports.html">All Ports</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <span class="tag">Technical Visualization</span>
+        <strong>BAPLIE / Bayplan 3D</strong>
+        <p>Visual vessel and container layer that replaces heavy spreadsheet navigation with filters, bayplan reading and 3D interaction.</p>
+        <div class="links"><a class="accent button" href="06_BAPLIE_Bayplan_3D/BAPLIE_Bayplan_Viewer_3D.html">Open 3D viewer</a></div>
+      </article>
+
+      <article class="card">
+        <span class="tag">Distribution</span>
+        <strong>Telegram Bot</strong>
+        <p>Automated delivery channel for operational reports, schedules and vessel information. This helps turn dashboards into a daily routine.</p>
+        <div class="links">
+          <a class="button" href="10_Telegram_Bot/TELEGRAM_BOT_PROJECT.md">Project summary</a>
+          <a class="secondary button" href="10_Telegram_Bot/bot_telegram_maritimo.py">Bot script</a>
+          <a class="secondary button" href="10_Telegram_Bot/Demo_Service_Schedule.html">Schedule example</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <span class="tag">Governance</span>
+        <strong>Operational Knowledge Hub</strong>
+        <p>Documentation, inventory, manuals, vessel rules and traceability in one place. This is the governance layer around the data operation.</p>
+        <div class="links">
+          <a class="button" href="01_Data_Center_Knowledge_Hub/Operational_Knowledge_Hub.md">Knowledge Hub</a>
+          <a class="secondary button" href="01_Data_Center_Knowledge_Hub/13_Operational_Vessels.md">Vessel structure</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <span class="tag">Automation</span>
+        <strong>Scripts and Sample Data</strong>
+        <p>Shows the repeatable foundation: Python scripts, input files and output bases ready to be standardized into a data pipeline.</p>
+        <div class="links">
+          <a class="button" href="08_Automation_Scripts/">Scripts</a>
+          <a class="secondary button" href="09_Sample_Data/">Sample data</a>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer>Prepared for meeting with External Review Team - 2026-04-29.<br>By Team Operations / Data Team.</footer>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

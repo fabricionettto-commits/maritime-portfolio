@@ -1,0 +1,3439 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VESSEL VIEW - Bay Plan Intelligence</title>
+<style>
+/* section */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow:wght@300;400;500&display=swap');
+
+/* section */
+:root {
+  --bg-deep:       #e2e8f0;
+  --bg-panel:      #f8fafc;
+  --bg-panel2:     #ffffff;
+  --bg-card:       #f1f5f9;
+  --bg-card2:      #e2e8f0;
+  --bg-input:      #ffffff;
+  --border:        #cbd5e1;
+  --border-bright: #94a3b8;
+  --border-glow:   #0d6efd33;
+
+  --text-primary:  #0f172a;
+  --text-secondary:#334155;
+  --text-muted:    #475569;
+  --text-accent:   #0f172a;
+
+  --accent:        #1a8fff;
+  --accent-dim:    #0d5aa7;
+  --accent-glow:   #1a8fff22;
+  --accent2:       #00d4aa;
+  --accent2-dim:   #009977;
+
+  --reefer:        #00b4e6;
+  --reefer-bg:     #00b4e61a;
+  --special:       #f59e0b;
+  --special-bg:    #f59e0b1a;
+  --danger:        #ef4444;
+  --danger-bg:     #ef44441a;
+  --success:       #2563A6;
+  --success-bg:    #2563A61a;
+
+  --topbar-h:      32px;
+  --stats-h:       36px;
+  --left-w:        240px;
+  --right-w:       300px;
+
+  --radius:        4px;
+  --radius-lg:     8px;
+
+  --font-mono:     'IBM Plex Mono', monospace;
+  --font-cond:     'Barlow Condensed', sans-serif;
+  --font-body:     'Barlow', sans-serif;
+}
+
+/* section */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg-deep); }
+body { font-family: var(--font-body); color: var(--text-primary); }
+
+.hidden { display: none !important; }
+
+/* section */
+#upload-screen {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+
+.upload-bg {
+  position: absolute; inset: 0;
+  background: 
+    radial-gradient(ellipse 80% 60% at 50% 0%, #0a1f3520 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, #1a8fff08 0%, transparent 60%),
+    repeating-linear-gradient(0deg, transparent, transparent 39px, #1e2d3d18 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, #1e2d3d18 40px),
+    var(--bg-deep);
+}
+
+.upload-content {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 820px;
+  padding: 20px 24px;
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+}
+
+.upload-brand {
+  display: flex; align-items: center; gap: 12px;
+}
+
+.brand-mark {
+  font-size: 28px; color: var(--accent);
+  text-shadow: 0 0 24px var(--accent), 0 0 48px var(--accent-dim);
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { text-shadow: 0 0 20px var(--accent), 0 0 40px var(--accent-dim); }
+  50% { text-shadow: 0 0 32px var(--accent), 0 0 64px var(--accent-dim), 0 0 96px var(--accent-dim); }
+}
+
+.brand-text { display: flex; flex-direction: column; }
+.brand-name {
+  font-family: var(--font-cond); font-size: 26px; font-weight: 700;
+  letter-spacing: 4px; color: var(--text-accent);
+  text-transform: uppercase;
+}
+.brand-tagline {
+  font-family: var(--font-mono); font-size: 9px; font-weight: 300;
+  letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase;
+}
+
+.upload-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  width: 100%;
+}
+
+.mode-selector {
+  width: 100%;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 10px 12px;
+}
+.mode-title {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+  color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.mode-options {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+}
+.mode-option {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.mode-option:hover { border-color: var(--border-bright); }
+.mode-option input { accent-color: var(--accent); }
+.mode-option span {
+  display: flex; flex-direction: column;
+  font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary);
+}
+.mode-option strong {
+  font-family: var(--font-cond); font-size: 15px; color: var(--text-accent);
+  letter-spacing: 2px;
+}
+.mode-option:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+}
+
+.upload-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8px; text-align: center;
+  transition: border-color .2s, box-shadow .2s;
+}
+.upload-card:hover { border-color: var(--border-bright); }
+.upload-card.loaded {
+  border-color: var(--accent2);
+  box-shadow: 0 0 20px var(--accent2-dim)22;
+}
+
+.upload-card-icon { font-size: 20px; }
+.upload-card-title {
+  font-family: var(--font-cond); font-size: 14px; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--text-accent);
+}
+.upload-card-sub {
+  font-family: var(--font-mono); font-size: 9px; color: var(--text-muted);
+  line-height: 1.35;
+}
+
+.upload-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 16px;
+  background: var(--accent); color: #fff;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase;
+  border: none; border-radius: var(--radius); cursor: pointer;
+  transition: background .15s, box-shadow .15s;
+}
+.upload-btn:hover { background: #2299ff; box-shadow: 0 0 12px var(--accent-glow); }
+.upload-btn.secondary { background: var(--bg-card2); border: 1px solid var(--border-bright); color: var(--text-secondary); }
+.upload-btn.secondary:hover { border-color: var(--accent); color: var(--text-accent); }
+
+.optional-tag {
+  font-size: 9px; color: var(--text-muted); font-weight: 300;
+  padding: 2px 6px; border: 1px solid var(--border); border-radius: 3px;
+}
+
+.upload-status {
+  font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);
+}
+.upload-status.ok { color: var(--accent2); }
+
+.launch-btn {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 38px;
+  background: var(--accent); color: #fff;
+  font-family: var(--font-cond); font-size: 16px; font-weight: 700;
+  letter-spacing: 4px; text-transform: uppercase;
+  border: none; border-radius: var(--radius); cursor: pointer;
+  transition: all .2s;
+  box-shadow: 0 4px 24px var(--accent-dim)66;
+}
+.launch-btn:hover:not(:disabled) {
+  background: #2299ff;
+  box-shadow: 0 4px 32px var(--accent)66, 0 0 64px var(--accent-dim)33;
+  transform: translateY(-1px);
+}
+.launch-btn:disabled {
+  background: var(--bg-card2); color: var(--text-muted);
+  cursor: not-allowed; box-shadow: none;
+}
+.launch-icon { font-size: 14px; }
+
+.upload-demo-note {
+  font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+.nor-instruction {
+  width: 100%;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+.nor-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 36px; height: 24px;
+  background: #174A7C;
+  border: 2px solid #C59A2F;
+  border-radius: 4px;
+  color: #dce8e7;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+.nor-card .stat-value { color: var(--danger); }
+
+/* section */
+#topbar {
+  height: var(--topbar-h);
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 8px; gap: 8px;
+  position: relative; z-index: 100;
+  flex-shrink: 0;
+}
+
+.topbar-left { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.topbar-brand { display: flex; align-items: center; gap: 8px; }
+.tb-mark { color: var(--accent); font-size: 14px; }
+.tb-name {
+  font-family: var(--font-cond); font-size: 15px; font-weight: 700;
+  letter-spacing: 3px; color: var(--text-accent);
+}
+
+.vessel-info { display: flex; align-items: center; gap: 5px; }
+.vi-label { font-family: var(--font-mono); font-size: 8px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.vi-value { font-family: var(--font-mono); font-size: 10px; color: var(--accent2); font-weight: 600; }
+.vi-sep { color: var(--border-bright); font-size: 12px; }
+
+.topbar-center { flex: 1; display: flex; justify-content: center; }
+
+.search-wrap {
+  position: relative; width: 100%; max-width: 300px;
+  display: flex; align-items: center;
+}
+.search-icon {
+  position: absolute; left: 8px; color: var(--text-muted); font-size: 12px;
+  pointer-events: none;
+}
+#search-input {
+  width: 100%;
+  background: var(--bg-input); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text-primary);
+  padding: 3px 8px 3px 24px;
+  font-family: var(--font-mono); font-size: 10px;
+  outline: none; transition: border-color .2s;
+}
+#search-input:focus { border-color: var(--accent); }
+#search-input::placeholder { color: var(--text-muted); }
+
+.search-dropdown {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+  background: var(--bg-panel2); border: 1px solid var(--border-bright);
+  border-radius: var(--radius); z-index: 200;
+  max-height: 240px; overflow-y: auto;
+}
+.search-item {
+  padding: 8px 12px; cursor: pointer;
+  font-family: var(--font-mono); font-size: 11px; color: var(--text-primary);
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: 8px; align-items: center;
+  transition: background .1s;
+}
+.search-item:hover { background: var(--bg-card2); }
+.search-item .si-id { color: var(--accent); font-weight: 500; }
+.search-item .si-info { color: var(--text-secondary); font-size: 10px; }
+
+.topbar-right { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+
+.tb-btn {
+  padding: 2px 6px;
+  background: transparent; border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text-secondary);
+  font-family: var(--font-mono); font-size: 9px; font-weight: 500;
+  cursor: pointer; transition: all .15s; white-space: nowrap;
+}
+.tb-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+.tb-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+.tb-btn.danger:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-bg); }
+.tb-divider { width: 1px; height: 16px; background: var(--border); margin: 0 2px; }
+
+/* section */
+#stats-bar {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  height: var(--stats-h);
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 4px; gap: 0;
+  flex-shrink: 0;
+}
+
+.stat-card {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 2px 4px; min-width: 44px;
+  border-right: 1px solid var(--border);
+}
+.stat-card:last-child { border-right: none; }
+.stat-value {
+  font-family: var(--font-mono); font-size: 15px; font-weight: 700;
+  color: var(--text-accent); line-height: 1;
+}
+.stat-label {
+  font-family: var(--font-mono); font-size: 6px; font-weight: 500;
+  color: var(--text-muted); letter-spacing: 1px; margin-top: 1px;
+}
+.reefer-card .stat-value { color: var(--reefer); }
+.nor-card .stat-value { color: var(--danger); }
+.special-card .stat-value { color: var(--special); }
+.teu-card .stat-value { color: var(--accent2); }
+
+/* section */
+#app {
+  display: flex; flex-direction: column;
+  height: 100vh; width: 100%;
+}
+
+#main-layout {
+  flex: 1; display: flex; overflow: hidden;
+  min-height: 0;
+}
+
+/* section */
+#left-panel {
+  width: var(--left-w); flex-shrink: 0;
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  display: flex; flex-direction: column;
+}
+#left-panel::-webkit-scrollbar { width: 4px; }
+#left-panel::-webkit-scrollbar-track { background: transparent; }
+#left-panel::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
+
+.panel-section {
+  border-bottom: 1px solid var(--border);
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  min-height: min-content;
+}
+
+.panel-title {
+  font-family: var(--font-mono); font-size: 9px; font-weight: 600;
+  color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.color-mode-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4px;
+}
+.cm-btn {
+  padding: 6px 4px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text-secondary);
+  font-family: var(--font-mono); font-size: 10px; font-weight: 500;
+  cursor: pointer; transition: all .15s; text-align: center;
+  letter-spacing: .5px;
+}
+.cm-btn:hover { border-color: var(--border-bright); color: var(--text-primary); }
+.cm-btn.active {
+  background: var(--accent-glow); border-color: var(--accent);
+  color: var(--accent); box-shadow: inset 0 0 8px var(--accent-glow);
+}
+
+.filter-group { margin-bottom: 8px; }
+.filter-label {
+  display: block; font-family: var(--font-mono); font-size: 9px;
+  color: var(--text-muted); letter-spacing: 1px; margin-bottom: 4px;
+}
+.filter-select {
+  width: 100%;
+  background: var(--bg-input); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text-secondary);
+  padding: 5px 8px; font-family: var(--font-mono); font-size: 11px;
+  outline: none; cursor: pointer; transition: border-color .15s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%234a6278'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 24px;
+}
+.filter-select:focus { border-color: var(--accent); color: var(--text-primary); }
+
+.filter-row {
+  display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px;
+}
+.filter-check {
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary);
+  cursor: pointer;
+}
+.filter-check input[type="checkbox"] {
+  width: 12px; height: 12px; accent-color: var(--accent); cursor: pointer;
+}
+.filter-check:hover { color: var(--text-primary); }
+
+.filter-reset-btn {
+  width: 100%; padding: 6px;
+  background: transparent; border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text-muted);
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px;
+  cursor: pointer; transition: all .15s;
+}
+.filter-reset-btn:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-bg); }
+
+/* LEGEND */
+#legend-container { display: flex; flex-direction: column; gap: 4px; }
+.legend-item {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 10px; color: var(--text-secondary);
+}
+.legend-swatch {
+  width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,.1);
+}
+
+.ops-summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.ops-tile {
+  background: var(--bg-panel2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+.ops-value {
+  font-family: var(--font-mono); font-size: 16px; font-weight: 700;
+  color: var(--accent);
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ops-label {
+  margin-top: 4px;
+  font-family: var(--font-mono); font-size: 8px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ops-list {
+  display: flex; flex-direction: column; gap: 6px;
+  max-height: 350px; overflow-y: auto;
+  padding-right: 4px;
+}
+.ops-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border-bright);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  flex-shrink: 0;
+}
+.ops-item.critical { border-left-color: var(--danger); }
+.ops-item.warning { border-left-color: var(--special); }
+.ops-item.ok { border-left-color: var(--success); }
+.ops-item-title {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+  letter-spacing: -0.2px;
+}
+.ops-item-sub {
+  margin-top: 4px;
+  font-family: var(--font-mono); font-size: 9px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+.ops-item-ids {
+  margin-top: 6px;
+  padding-top: 4px;
+  border-top: 1px dashed var(--border);
+  font-family: var(--font-mono); font-size: 9px;
+  color: var(--accent);
+  word-break: break-all;
+}
+
+/* section */
+#canvas-wrap {
+  flex: 1; position: relative; overflow: hidden;
+  background: var(--bg-deep);
+}
+
+#renderer-container {
+  position: absolute; inset: 0;
+}
+#renderer-container canvas {
+  display: block; width: 100% !important; height: 100% !important;
+}
+
+/* Bay Navigator */
+#bay-nav-wrap {
+  position: absolute; bottom: 16px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-panel)ee;
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-lg);
+  padding: 8px 12px;
+  backdrop-filter: blur(8px);
+  max-width: 90%;
+}
+.bay-nav-title {
+  font-family: var(--font-mono); font-size: 8px; color: var(--text-muted);
+  letter-spacing: 2px; text-align: center; margin-bottom: 6px;
+}
+#bay-navigator {
+  display: flex; gap: 3px; flex-wrap: wrap; justify-content: center;
+  max-height: 80px; overflow-y: auto;
+}
+.bay-nav-btn {
+  padding: 3px 8px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 3px; color: var(--text-muted);
+  font-family: var(--font-mono); font-size: 10px;
+  cursor: pointer; transition: all .1s;
+}
+.bay-nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+.bay-nav-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* Loading overlay */
+#loading-overlay {
+  position: absolute; inset: 0;
+  background: var(--bg-deep)cc;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 50;
+  backdrop-filter: blur(4px);
+}
+.loading-inner { text-align: center; }
+.loading-spinner {
+  width: 40px; height: 40px; margin: 0 auto 16px;
+  border: 2px solid var(--border-bright);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text {
+  font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary);
+  letter-spacing: 2px;
+}
+
+/* section */
+#detail-panel {
+  width: var(--right-w); flex-shrink: 0;
+  background: var(--bg-panel);
+  border-left: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+
+.detail-header {
+  padding: 14px 14px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+#detail-title {
+  font-family: var(--font-mono); font-size: 14px; font-weight: 600;
+  color: var(--accent); letter-spacing: 1px;
+}
+.detail-close {
+  background: transparent; border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text-muted);
+  font-size: 12px; width: 24px; height: 24px;
+  cursor: pointer; transition: all .15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.detail-close:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-bg); }
+
+#detail-content {
+  flex: 1; overflow-y: auto; padding: 12px;
+}
+#detail-content::-webkit-scrollbar { width: 3px; }
+#detail-content::-webkit-scrollbar-thumb { background: var(--border-bright); }
+
+.detail-section {
+  margin-bottom: 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+}
+.detail-section h4 {
+  font-family: var(--font-mono); font-size: 9px; font-weight: 600;
+  color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase;
+  padding: 6px 10px; background: var(--bg-card2);
+  border-bottom: 1px solid var(--border);
+}
+.detail-row {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--border)77;
+}
+.detail-row:last-child { border-bottom: none; }
+.dlabel {
+  font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);
+  flex-shrink: 0; margin-right: 8px;
+}
+.dvalue {
+  font-family: var(--font-mono); font-size: 11px; color: var(--text-primary);
+  text-align: right; word-break: break-all;
+}
+
+.detail-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 3px;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  margin: 6px 10px;
+}
+.badge-reefer { background: var(--reefer-bg); color: var(--reefer); border: 1px solid var(--reefer)44; }
+.badge-special { background: var(--special-bg); color: var(--special); border: 1px solid var(--special)44; }
+.badge-dry { background: var(--bg-card2); color: var(--text-secondary); border: 1px solid var(--border); }
+
+/* section */
+#tooltip {
+  position: fixed; z-index: 9999;
+  background: var(--bg-panel2);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-lg);
+  padding: 12px 14px;
+  min-width: 220px; max-width: 300px;
+  pointer-events: none;
+  box-shadow: 0 8px 32px rgba(0,0,0,.6);
+  backdrop-filter: blur(8px);
+}
+.tt-id {
+  font-family: var(--font-mono); font-size: 13px; font-weight: 600;
+  color: var(--accent); margin-bottom: 8px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.tt-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 3px;
+}
+.tt-label {
+  font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);
+}
+.tt-value {
+  font-family: var(--font-mono); font-size: 10px; color: var(--text-primary); font-weight: 500;
+}
+
+/* section */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* section */
+@media (max-width: 1024px) {
+  :root { --left-w: 200px; --right-w: 260px; }
+}
+
+</style>
+<!-- SheetJS for Excel parsing -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+<!-- section -->
+<div id="upload-screen">
+  <div class="upload-bg"></div>
+  <div class="upload-content">
+    <div class="upload-brand">
+      <div class="brand-mark">LOG</div>
+      <div class="brand-text">
+        <span class="brand-name">VESSEL VIEW V6</span>
+        <span class="brand-tagline">Load + Discharge Intelligence System</span>
+      </div>
+    </div>
+
+    <div class="mode-selector">
+      <div class="mode-title">Operation Mode</div>
+      <div class="mode-options">
+        <label class="mode-option">
+          <input type="radio" name="operation-mode" value="LOAD">
+          <span><strong>LOAD</strong>Booking export vs BAPLIE load</span>
+        </label>
+        <label class="mode-option">
+          <input type="radio" name="operation-mode" value="DISCHARGE" checked>
+          <span><strong>DISCHARGE</strong>Import booking vs BAPLIE arrival</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="upload-grid">
+      <div class="upload-card" id="card-baplie">
+        <div class="upload-card-icon">BP</div>
+        <div class="upload-card-title" id="label-baplie-title">BAPLIE / Bay Plan</div>
+        <div class="upload-card-sub" id="label-baplie-sub">Excel (.xlsx) - Bay, Slot, Container Id, Size, POL, POD, Weight, Type</div>
+        <label class="upload-btn">
+          <input type="file" id="file-baplie" accept=".xlsx,.xls" hidden>
+          SELECT FILE
+        </label>
+        <div class="upload-status" id="status-baplie">No file loaded</div>
+      </div>
+
+      <div class="upload-card" id="card-movies">
+        <div class="upload-card-icon">BK</div>
+        <div class="upload-card-title" id="label-booking-title">Commercial Data</div>
+        <div class="upload-card-sub" id="label-booking-sub">Excel (.xlsx) - Container, Booking Number, Customer, POD, Cargo Type, Revenue, Temp</div>
+        <label class="upload-btn secondary">
+          <input type="file" id="file-movies" accept=".xlsx,.xls" hidden>
+          SELECT FILE
+        </label>
+        <div class="upload-status" id="status-movies">No file loaded</div>
+      </div>
+
+      <div class="upload-card" id="card-edi">
+        <div class="upload-card-icon">EDI</div>
+        <div class="upload-card-title" id="label-edi-title">EDI / BAPLIE LOAD</div>
+        <div class="upload-card-sub" id="label-edi-sub">Optional for LOAD. Priority source when supplied.</div>
+        <label class="upload-btn secondary">
+          <input type="file" id="file-edi" accept=".edi,.txt,.edi2" hidden>
+          SELECT FILE <span class="optional-tag" id="edi-required-tag">optional</span>
+        </label>
+        <div class="upload-status" id="status-edi">No file loaded</div>
+      </div>
+    </div>
+
+    <button id="btn-launch" class="launch-btn" disabled>
+      <span class="launch-icon">Play</span>
+      RUN V6 ANALYSIS
+    </button>
+
+    <div class="upload-demo-note" id="upload-requirements">
+      LOAD requires BAPLIE Excel + Commercial Data. EDI is optional and overrides conflicts.
+    </div>
+    <div class="nor-instruction">
+      <span class="nor-badge">NOR</span>
+      <span>RH/RF/RE without valid temperature = NOR for LOAD and DISCHARGE.</span>
+    </div>
+  </div>
+</div>
+
+<!-- section -->
+<div id="app" class="hidden">
+
+  <!-- TOP BAR -->
+  <header id="topbar">
+    <div class="topbar-left">
+      <div class="topbar-brand">
+        <span class="tb-mark">LOG</span>
+        <span class="tb-name">VESSEL VIEW</span>
+      </div>
+      <div class="vessel-info" id="vessel-info-bar">
+        <span class="vi-label">Vessel</span>
+        <span class="vi-value" id="vi-vessel">-</span>
+        <span class="vi-sep">|</span>
+        <span class="vi-label">Voyage</span>
+        <span class="vi-value" id="vi-voyage">-</span>
+        <span class="vi-sep">|</span>
+        <span class="vi-label">Port</span>
+        <span class="vi-value" id="vi-port">-</span>
+        <span class="vi-sep">|</span>
+        <span class="vi-label">Mode</span>
+        <span class="vi-value" id="vi-mode">DISCHARGE</span>
+      </div>
+    </div>
+    <div class="topbar-center">
+      <div class="search-wrap">
+        <span class="search-icon">Search</span>
+        <input type="text" id="search-input" placeholder="Search container, booking, client..." autocomplete="off">
+        <div id="search-results" class="search-dropdown hidden"></div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="tb-btn" id="btn-reset-cam" title="Reset Camera"></button>
+      <button class="tb-btn" id="btn-cam-front" title="Front View">F</button>
+      <button class="tb-btn" id="btn-cam-side" title="Side View">S</button>
+      <button class="tb-btn" id="btn-cam-top" title="Top View">T</button>
+      <div class="tb-divider"></div>
+      <button class="tb-btn" id="btn-labels" title="Toggle Labels">Aa</button>
+      <button class="tb-btn" id="btn-structure" title="Toggle Structure"></button>
+      <button class="tb-btn" id="btn-export" title="Export CSV">Download CSV</button>
+      <div class="tb-divider"></div>
+      <button class="tb-btn danger" id="btn-back" title="Back to Upload">X</button>
+    </div>
+  </header>
+
+  <!-- STATS BAR -->
+  <div id="stats-bar">
+    <div class="stat-card" id="stat-total">
+      <div class="stat-value">0</div>
+      <div class="stat-label">TOTAL CONTAINER</div>
+    </div>
+    <div class="stat-card" id="stat-dc20">
+      <div class="stat-value">0</div>
+      <div class="stat-label">DC20</div>
+    </div>
+    <div class="stat-card" id="stat-hc40">
+      <div class="stat-value">0</div>
+      <div class="stat-label">HC40</div>
+    </div>
+    <div class="stat-card reefer-card" id="stat-rh40">
+      <div class="stat-value">0</div>
+      <div class="stat-label">RH40</div>
+    </div>
+    <div class="stat-card special-card" id="stat-fr40">
+      <div class="stat-value">0</div>
+      <div class="stat-label">FR40</div>
+    </div>
+    <div class="stat-card special-card" id="stat-ot40">
+      <div class="stat-value">0</div>
+      <div class="stat-label">OT40</div>
+    </div>
+    <div class="stat-card nor-card" id="stat-nor">
+      <div class="stat-value">0</div>
+      <div class="stat-label">NOR</div>
+    </div>
+    <div class="stat-card special-card" id="stat-imo">
+      <div class="stat-value">0</div>
+      <div class="stat-label">IMO</div>
+    </div>
+    <div class="stat-card" id="stat-full">
+      <div class="stat-value">0</div>
+      <div class="stat-label">TOTAL FULL</div>
+    </div>
+    <div class="stat-card" id="stat-empty">
+      <div class="stat-value">0</div>
+      <div class="stat-label">TOTAL EMPTY</div>
+    </div>
+    <div class="stat-card teu-card" id="stat-teus">
+      <div class="stat-value">0</div>
+      <div class="stat-label">TEUS</div>
+    </div>
+    <div class="stat-card" id="stat-tons">
+      <div class="stat-value">0</div>
+      <div class="stat-label">TONS</div>
+    </div>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div id="main-layout">
+
+    <!-- LEFT PANEL: Controls -->
+    <aside id="left-panel">
+      <div class="panel-section">
+        <div class="panel-title">OPERATIONAL INTELLIGENCE</div>
+        <div class="ops-summary" id="ops-summary"></div>
+      </div>
+
+      <div class="panel-section">
+        <div class="panel-title">CRITICAL DIVERGENCES</div>
+        <div class="ops-list" id="ops-critical"></div>
+      </div>
+
+      <div class="panel-section">
+        <div class="panel-title">POD / PORT PERFORMANCE</div>
+        <div class="ops-list" id="ops-ports"></div>
+      </div>
+
+      <div class="panel-section">
+        <div class="panel-title">COLOR MODE</div>
+        <div class="color-mode-grid">
+          <button class="cm-btn active" data-mode="type">TYPE</button>
+          <button class="cm-btn" data-mode="pol">POL</button>
+          <button class="cm-btn" data-mode="pod">POD</button>
+          <button class="cm-btn" data-mode="client">CLIENT</button>
+          <button class="cm-btn" data-mode="fullEmpty">FULL/EMPTY</button>
+          <button class="cm-btn" data-mode="reeferDry">REEFER/DRY</button>
+          <button class="cm-btn" data-mode="specials">SPECIALS</button>
+          <button class="cm-btn" data-mode="weight">WEIGHT MAP</button>
+          <button class="cm-btn" data-mode="carrier">CARRIER</button>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <div class="panel-title">FILTERS</div>
+        <div class="filter-group">
+          <label class="filter-label">Type</label>
+          <select id="filter-type" class="filter-select">
+            <option value="">All Types</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">POL</label>
+          <select id="filter-pol" class="filter-select">
+            <option value="">All POL</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">POD</label>
+          <select id="filter-pod" class="filter-select">
+            <option value="">All POD</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Client</label>
+          <select id="filter-client" class="filter-select">
+            <option value="">All Clients</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Carrier</label>
+          <select id="filter-carrier" class="filter-select">
+            <option value="">All Carriers</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Special</label>
+          <select id="filter-special-type" class="filter-select">
+            <option value="">All Specials</option>
+            <option value="IMO">IMO</option>
+            <option value="NOR">NOR</option>
+            <option value="FR">FR</option>
+            <option value="OT">OT</option>
+          </select>
+        </div>
+        <div class="filter-row">
+          <label class="filter-check">
+            <input type="checkbox" id="filter-reefer"> Reefer only
+          </label>
+          <label class="filter-check">
+            <input type="checkbox" id="filter-full"> Full only
+          </label>
+          <label class="filter-check">
+            <input type="checkbox" id="filter-empty"> Empty only
+          </label>
+        </div>
+        <button class="filter-reset-btn" id="btn-clear-filters">CLEAR ALL FILTERS</button>
+      </div>
+
+      <div class="panel-section">
+        <div class="panel-title">LEGEND</div>
+        <div id="legend-container"></div>
+      </div>
+    </aside>
+
+    <!-- CENTER: 3D Canvas -->
+    <main id="canvas-wrap">
+      <div id="renderer-container"></div>
+
+      <!-- Bay Navigator -->
+      <div id="bay-nav-wrap">
+        <div class="bay-nav-title">BAY NAVIGATOR</div>
+        <div id="bay-navigator"></div>
+      </div>
+
+      <!-- Loading overlay -->
+      <div id="loading-overlay">
+        <div class="loading-inner">
+          <div class="loading-spinner"></div>
+          <div class="loading-text">Building vessel...</div>
+        </div>
+      </div>
+    </main>
+
+    <!-- RIGHT PANEL: Detail -->
+    <aside id="detail-panel" class="hidden">
+      <div class="detail-header">
+        <div id="detail-title">-</div>
+        <button class="detail-close" id="btn-close-detail">X</button>
+      </div>
+      <div id="detail-content"></div>
+    </aside>
+
+  </div><!-- /main-layout -->
+
+</div><!-- /app -->
+
+<!-- TOOLTIP -->
+<div id="tooltip" class="hidden"></div>
+
+<!-- SCRIPTS -->
+<script>
+/**
+ * config.js - Centralized configuration: colors, type maps, constants
+ */
+const CONFIG = {
+
+    // ”€ ISO TYPE -> FRIENDLY CATEGORY ”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    TYPE_MAP: {
+        // Already-normalized commercial categories
+        'DC20': 'DC20', 'DC40': 'DC40', 'HC20': 'HC20', 'HC40': 'HC40',
+        'RH20': 'RH20', 'RH40': 'RH40', 'RF20': 'RH20', 'RF40': 'RH40',
+        'FR20': 'FR20', 'FR40': 'FR40', 'OT20': 'OT20', 'OT40': 'OT40',
+        'PL20': 'PL20', 'PL40': 'PL40', 'TK20': 'TK20', 'TK40': 'TK40',
+
+        // DC20 (20' Standard Dry)
+        '2200': 'DC20', '2210': 'DC20', '20G0': 'DC20', '22G0': 'DC20', '22G1': 'DC20', '22GP': 'DC20', '22DC': 'DC20',
+        
+        // DC40 (40' Standard Dry)
+        '42G1': 'DC40', '42G0': 'DC40', '4200': 'DC40', '42GP': 'DC40',
+        
+        // HC20 (20' High Cube)
+        '25G1': 'HC20',
+        
+        // HC40 (40' High Cube Dry)
+        '4500': 'HC40', '4510': 'HC40', '45B0': 'HC40', '45G0': 'HC40', '45G1': 'HC40', '45V0': 'HC40', '45GP': 'HC40',
+        
+        // RH20 (20' Reefer HC / Reefer)
+        '22R1': 'RH20', '22R0': 'RH20',
+        
+        // RH40 (40' Reefer HC)
+        '4530': 'RH40', '4532': 'RH40', '45RH': 'RH40', '42R0': 'RH40', '42R1': 'RH40', '45R0': 'RH40', '45R1': 'RH40',
+
+        // PL20 (Platform 20')
+        '22P1': 'PL20',
+        
+        // PL40 (Platform 40')
+        '42P1': 'PL40',
+        
+        // FR20 (Flat Rack 20')
+        '22P3': 'FR20', '22F0': 'FR20', '22F5': 'FR20',
+        
+        // FR40 (Flat Rack 40')
+        '42P3': 'FR40', '45P3': 'FR40', '42F0': 'FR40', '42F5': 'FR40', '45F0': 'FR40', '45F5': 'FR40',
+        
+        // OT20 (Open Top 20')
+        '22U1': 'OT20', '22U0': 'OT20',
+        
+        // OT40 (Open Top 40')
+        '4351': 'OT40', '42U1': 'OT40', '45U1': 'OT40', '45U6': 'OT40', '42U0': 'OT40', '45U0': 'OT40',
+        
+        // TK20 (Tank 20')
+        '22T5': 'TK20', '22T0': 'TK20',
+        
+        // TK40 (Tank 40')
+        '42T5': 'TK40', '42T0': 'TK40', '45T5': 'TK40',
+    },
+
+    /**
+     * Classify ISO type into friendly name (with prefix matching fallback)
+     */
+    getFriendlyType(isoType) {
+        if (!isoType) return 'OTHER';
+        const t = isoType.trim().toUpperCase();
+        if (CONFIG.TYPE_MAP[t]) return CONFIG.TYPE_MAP[t];
+        if (/^(DC|DV|GP)20$/.test(t)) return 'DC20';
+        if (/^(DC|DV|GP)40$/.test(t)) return 'DC40';
+        if (/^(HC|HQ)20$/.test(t)) return 'HC20';
+        if (/^(HC|HQ)40$/.test(t)) return 'HC40';
+        if (/^(RH|RF|RE)20$/.test(t)) return 'RH20';
+        if (/^(RH|RF|RE)40$/.test(t)) return 'RH40';
+        if (/^FR20$/.test(t)) return 'FR20';
+        if (/^FR40$/.test(t)) return 'FR40';
+        if (/^OT20$/.test(t)) return 'OT20';
+        if (/^OT40$/.test(t)) return 'OT40';
+        // Prefix fallback
+        if (t.startsWith('22') && (t[2] === 'G' || t[2] === '0')) return 'DC20';
+        if ((t.startsWith('42') || t.startsWith('45')) && (t[2] === 'G' || t[2] === '0')) return 'HC40';
+        if (t.includes('R0') || t.includes('R1')) return t.startsWith('2')  'RH20' : 'RH40';
+        if (t.includes('P3') || t.includes('F0') || t.includes('F5')) return t.startsWith('2')  'FR20' : 'FR40';
+        if (t.includes('P1') || t.includes('P0')) return t.startsWith('2')  'PL20' : 'PL40';
+        if (t.includes('U0') || t.includes('U1') || t.includes('U6')) return t.startsWith('2')  'OT20' : 'OT40';
+        if (t.includes('T0') || t.includes('T5')) return t.startsWith('2')  'TK20' : 'TK40';
+        return 'OTHER';
+    },
+
+    getOperationalType(type, size, height) {
+        const raw = String(type || '').trim().toUpperCase();
+        const sz = parseInt(size) || 0;
+        const h = String(height || '').trim().toUpperCase();
+        const mapped = CONFIG.getFriendlyType(raw);
+        if (mapped !== 'OTHER') return mapped;
+        if (raw === 'GP' || raw === 'DC' || raw === 'DRY' || raw === 'DV' || raw === 'STD') {
+            if (sz < 40) return 'DC20';
+            return h.includes('9') || h.includes('HC') || h.includes('HIGH')  'HC40' : 'DC40';
+        }
+        if (raw === 'HC' || raw === 'HQ' || raw === 'HIGH CUBE') return sz < 40  'HC20' : 'HC40';
+        if (raw === 'RF' || raw === 'RH' || raw === 'REEFER') return sz < 40  'RH20' : 'RH40';
+        if (raw === 'FR' || raw === 'FLAT' || raw === 'FLAT RACK') return sz < 40  'FR20' : 'FR40';
+        if (raw === 'OT' || raw === 'OPEN TOP') return sz < 40  'OT20' : 'OT40';
+        if (sz) return sz < 40  'DC20' : 'HC40';
+        return 'DC20';
+    },
+
+    colorFromKey(key, salt = '') {
+        const text = `${salt}:${key || 'UNKNOWN'}`;
+        let hash = 0;
+        for (let i = 0; i < text.length; i++) hash = text.charCodeAt(i) + ((hash << 5) - hash);
+        const hue = Math.abs(hash) % 360;
+        return new THREE.Color().setHSL(hue / 360, 0.72, 0.48).getHex();
+    },
+
+    getSpecialCategory(container) {
+        if (container.imo) return 'IMO';
+        if (container.isNOR) return 'NOR';
+        if (String(container.friendlyType || '').startsWith('FR')) return 'FR';
+        if (String(container.friendlyType || '').startsWith('OT')) return 'OT';
+        return '';
+    },
+
+    /**
+     * Determine if type is reefer
+     */
+    isReefer(isoType) {
+        if (!isoType) return false;
+        const ft = CONFIG.getFriendlyType(isoType);
+        return ft === 'RH40' || ft === 'RH20' || ft === 'RE40' || ft === 'RE20';
+    },
+
+    isReeferType(type, size, friendlyType = '') {
+        const raw = String(type || '').trim().toUpperCase();
+        const ft = String(friendlyType || CONFIG.getOperationalType(raw, size, '') || '').trim().toUpperCase();
+        if (ft === 'RH40' || ft === 'RH20' || ft === 'RE40' || ft === 'RE20') return true;
+        if (raw === 'RF' || raw === 'RH' || raw === 'RE' || raw === 'REEFER') return true;
+        return raw.includes('R') && (raw.startsWith('R') || raw.charAt(2) === 'R' || raw.includes('RH') || raw.includes('RF') || raw.includes('RE'));
+    },
+
+    /**
+     * Determine if type is special (non-dry, non-reefer)
+     */
+    isSpecial(isoType) {
+        if (!isoType) return false;
+        const ft = CONFIG.getFriendlyType(isoType);
+        return ['FR40', 'FR20', 'PL40', 'PL20', 'OT40', 'OT20', 'TK40', 'TK20', 'FT40', 'FT20'].includes(ft);
+    },
+
+    // ”€ COLORS (as hex integers for Three.js) ”€”€”€”€”€”€”€”€”€”€
+    COLORS: {
+        type: {
+            'DC20':  0xfacc15, // Yellow
+            'DC40':  0xeab308, // Darker Yellow
+            'HC40':  0x2563A6, // Green
+            'HC20':  0x4ade80, // Lighter Green
+            'RH40':  0x0ea5e9, // Blue
+            'RH20':  0x0284c7, // Darker Blue
+            'RE40':  0x0ea5e9,
+            'RE20':  0x0284c7,
+            'FR40':  0xef4444, // Red
+            'FR20':  0xef4444, // Red
+            'PL40':  0xef4444,
+            'PL20':  0xef4444,
+            'OT40':  0xa855f7, // Purple
+            'OT20':  0xa855f7, // Purple
+            'TK40':  0x6366f1,
+            'TK20':  0x818cf8,
+            'FT40':  0x64748b,
+            'FT20':  0x94a3b8,
+            'OTHER': 0x64748b,
+        },
+        pol: {
+            'USNYC': 0x2563A6,
+            'USHOU': 0x3b82f6,
+            'USNFK': 0xf59e0b,
+            'USHOU': 0xa855f7,
+            'USMIA': 0xef4444,
+            'USSEA': 0x6366f1,
+            'CAVAN': 0x06b6d4,
+            'USSEA': 0xf97316,
+            '_default': 0x475569,
+        },
+        pod: {
+            'USNYC': 0x2563A6,
+            'USHOU': 0x3b82f6,
+            'USNFK': 0xf59e0b,
+            'USHOU': 0xa855f7,
+            'USMIA': 0xef4444,
+            'USSEA': 0x6366f1,
+            'CAVAN': 0x06b6d4,
+            'USSEA': 0xf97316,
+            '_default': 0x475569,
+        },
+        fullEmpty: {
+            'Full':  0x2563A6,
+            'Empty': 0x94a3b8,
+        },
+        reeferDry: {
+            'reefer':  0x00b4e6,
+            'dry':     0x2563A6,
+            'special': 0xf59e0b,
+        },
+        specials: {
+            'IMO': 0xef4444,
+            'NOR': 0x0ea5e9,
+            'FR':  0xf59e0b,
+            'OT':  0xa855f7,
+            'OTHER': 0x94a3b8,
+        },
+        carrier: {
+            '_default': 0x475569,
+        },
+    },
+
+    // ”€ ROTATION ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    ROTATION: ['USNYC', 'USHOU', 'USNFK', 'USHOU'],
+
+    // ”€ 3D LAYOUT CONSTANTS ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    SCENE: {
+        CONTAINER_W_20: 2.5,  // 20' width (beam direction)
+        CONTAINER_W_40: 2.5,  // 40' same beam
+        CONTAINER_L_20: 3.0,  // 20' length (fore-aft)
+        CONTAINER_L_40: 6.0,  // 40' length
+        CONTAINER_H:    2.2,  // container height
+        BAY_GAP:        0.3,  // gap between bays
+        ROW_GAP:        0.15, // gap between rows
+        TIER_GAP:       0.1,  // gap between tiers
+        HOLD_TIERS:     [2, 4, 6, 8, 10, 12, 14, 16, 18, 20],   // tiers considered hold
+        DECK_TIERS:     [80, 82, 84, 86, 88, 90, 92, 94, 96, 98],  // tiers on deck
+        HOLD_BASE_Y:    -8,
+        DECK_BASE_Y:    0,
+    },
+};
+
+</script>
+<script>
+/**
+ * parser.js - Read and normalize BAPLIE Excel, Movies Excel, and EDI files
+ */
+
+const PARSER = {
+
+    getRowValue(row, exactKeys = [], includePatterns = [], excludePatterns = []) {
+        for (const key of exactKeys) {
+            const value = row[key];
+            if (String(value || '').trim()) return value;
+        }
+        for (const [key, value] of Object.entries(row)) {
+            const normalizedKey = String(key || '').toLowerCase().trim();
+            const hasValue = String(value || '').trim() !== '';
+            if (!hasValue) continue;
+            const included = includePatterns.some(pattern => pattern.test(normalizedKey));
+            const excluded = excludePatterns.some(pattern => pattern.test(normalizedKey));
+            if (included && !excluded) return value;
+        }
+        return '';
+    },
+
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    // BAPLIE EXCEL
+    // Expects columns (case-insensitive, trimmed):
+    //   Bay, Slot, Container Id, Size, POL, POD, Weight, Carrier,
+    //   Type, Class, Setting, Height, Full, Delivery, Opt Port
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    parseBaplieExcel(arrayBuffer, mode = 'LOAD') {
+        const wb = XLSX.read(arrayBuffer, { type: 'array' });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const raw = this.sheetToObjects(ws);
+        const isDischarge = String(mode || '').toUpperCase() === 'DISCHARGE';
+
+        if (!raw.length) throw new Error('BAPLIE Excel: empty sheet');
+
+        // Normalize headers (lowercase + trim)
+        const normalized = raw.map(row => {
+            const n = {};
+            for (const [k, v] of Object.entries(row)) {
+                n[k.toLowerCase().trim().replace(/\s+/g, ' ')] = v;
+            }
+            return n;
+        });
+
+        return normalized.map((r, idx) => {
+            const slot = String(r['slot'] || r['position'] || r['pos'] || r['cell'] || '').trim();
+            const { bay, row, tier } = this.parseSlot(slot, r['bay'] || r['b']);
+
+            const size = parseInt(r['size'] || r['siz']) || 20;
+            const isoType = String(r['type'] || r['iso type'] || r['ctr type'] || r['container type'] || '').trim().toUpperCase();
+            const height = String(r['height'] || '').trim();
+            const friendlyType = CONFIG.getOperationalType(isoType, size, height);
+            const fullStr = String(r['full'] || r['status'] || '').trim();
+            const polValue = this.getRowValue(
+                r,
+                ['pol', 'po', 'load port', 'port of loading', 'orig', 'origin'],
+                [/^pol$/, /^po$/, /load.*port/, /port.*load/, /^orig/, /origin/],
+                [/disch/, /discharge/, /^pod$/, /dest/, /del/]
+            );
+            const podValue = this.getRowValue(
+                r,
+                ['pod', 'po 2', 'disch port', 'disch. port', 'disc port', 'discharge port', 'port of discharge', 'dest', 'destination', 'del port', 'delivery port', 'final port', 'fpod'],
+                [/^pod$/, /^po 2$/, /disch/, /disc/, /port.*discharge/, /dest/, /delivery.*port/, /^del.*port$/, /final.*port/, /^fpod$/],
+                [/load/, /^pol$/, /origin/, /^orig/]
+            );
+
+            const tempVal = String(r['setting'] || r['settin'] || r['temp'] || r['temperature'] || '').trim().toUpperCase();
+            const hasTemp = tempVal !== '' && tempVal !== '0' && !tempVal.includes('DRY') && !tempVal.includes('NOR');
+            const markerText = `${tempVal} ${fullStr} ${r['cargo type'] || ''} ${r['commodity'] || ''}`.toUpperCase();
+            const explicitNor = markerText.includes('NOR') || markerText.includes('NO TEMP') || markerText.includes('NON OPER');
+            
+            // Unified Reefer/NOR logic for LOAD and DISCHARGE.
+            const isReeferType = CONFIG.isReeferType(isoType, size, friendlyType) || tempVal.includes('REEFER');
+            
+            let isNOR = isReeferType && (!hasTemp || explicitNor);
+            let isReefer = isReeferType && !isNOR;
+            
+            const imo = String(r['imo'] || r['imdg'] || r['class'] || r['cla'] || r['dg'] || '').trim().toUpperCase();
+            const hasImo = imo !== '' && imo !== '0' && imo !== 'NONE' && imo !== 'NO';
+
+            let isSpecial = CONFIG.isSpecial(isoType) || hasImo;
+            let isDry = !isReefer && !isSpecial;
+
+            // NORs are categorized as Dry/HC40 or DC20 for display
+            if (isNOR) {
+                isDry = true;
+            }
+
+            return {
+                _idx: idx,
+                containerId: String(r['container id'] || r['container'] || r['container no'] || r['container number'] || r['ctr'] || r['cntr'] || '').trim(),
+                slot,
+                bay,
+                row,
+                tier,
+                size,
+                type: isoType,
+                friendlyType: isNOR  (size >= 40  'HC40' : 'DC20') : friendlyType,
+                realType: isoType, 
+                height,
+                pol: String(polValue || '').trim().toUpperCase(),
+                pod: String(podValue || '').trim().toUpperCase(),
+                weight: parseFloat(r['weight'] || r['weig'] || r['gross weight'] || 0),
+                carrier: String(r['carrier'] || r['operator'] || r['line'] || r['carri'] || '').trim().toUpperCase(),
+                class: imo,
+                setting: tempVal,
+                full: fullStr,
+                delivery: String(r['delivery'] || r['delive'] || '').trim(),
+                optPort: String(r['opt port'] || r['optport'] || r['opt po'] || '').trim(),
+
+                // Derived flags
+                isReefer: isReefer,
+                isNOR: isNOR,
+                isSpecial: isSpecial,
+                imo: imo,
+                isDry: isDry,
+                isFull: /^f/i.test(fullStr),
+                isEmpty: /^e/i.test(fullStr),
+                isDeck: this.isDeck(tier),
+
+                // Will be enriched by Movies join or fallback to BAPLIE columns if present
+                bookingNumber: String(r['booking number'] || r['booking'] || r['booking #'] || '').trim(),
+                bookingParty: String(r['booking party'] || r['client'] || r['shipper'] || '').trim(),
+                temp: tempVal,
+                poo: String(r['poo'] || '').trim().toUpperCase(),
+                fpod: String(r['fpod'] || '').trim().toUpperCase(),
+                revenue: parseFloat(r['revenue']) || 0,
+                vesselOrigem: String(r['vessel origem'] || r['vessel'] || '').trim(),
+            };
+        }).filter(c => c.containerId);
+    },
+
+    sheetToObjects(ws) {
+        const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+        if (!rows.length) return [];
+
+        const scoreHeader = row => {
+            const labels = row.map(v => String(v || '').toLowerCase().trim());
+            let score = 0;
+            labels.forEach(label => {
+                if (/container|contain|cntr|ctr/.test(label)) score += 4;
+                if (/slot|position|posicao|posico/.test(label)) score += 3;
+                if (/bay|^b$|^po$|disch port|load port|pol|pod/.test(label)) score += 2;
+                if (/size|type|weight|full|carrier/.test(label)) score += 1;
+            });
+            return score;
+        };
+
+        let headerIndex = 0;
+        let bestScore = -1;
+        rows.slice(0, 30).forEach((row, idx) => {
+            const score = scoreHeader(row);
+            if (score > bestScore) {
+                bestScore = score;
+                headerIndex = idx;
+            }
+        });
+
+        const seenHeaders = {};
+        const headers = rows[headerIndex].map((h, idx) => {
+            const normalized = String(h || '').toLowerCase().trim().replace(/\s+/g, ' ');
+            const base = normalized || `column ${idx + 1}`;
+            seenHeaders[base] = (seenHeaders[base] || 0) + 1;
+            return seenHeaders[base] === 1  base : `${base} ${seenHeaders[base]}`;
+        });
+
+        return rows.slice(headerIndex + 1).map(row => {
+            const obj = {};
+            headers.forEach((header, idx) => { obj[header] = row[idx]; });
+            return obj;
+        }).filter(obj => Object.values(obj).some(v => String(v || '').trim() !== ''));
+    },
+
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    // MOVIES EXCEL (commercial data)
+    // Columns: Container, Vessel Origem, Booking Number, Type,
+    //   Weight, Temp, IMO, Booking party, POO, FPOD, Revenue
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    parseMoviesExcel(arrayBuffer) {
+        return this.parseBookingExcel(arrayBuffer).map;
+    },
+
+    parseBookingExcel(arrayBuffer) {
+        const wb = XLSX.read(arrayBuffer, { type: 'array' });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const raw = this.sheetToObjects(ws);
+
+        const map = {};
+        const rows = [];
+        raw.forEach(row => {
+            const n = {};
+            for (const [k, v] of Object.entries(row)) {
+                n[k.toLowerCase().trim().replace(/\s+/g, ' ')] = v;
+            }
+            const id = String(n['container'] || n['container id'] || n['container number'] || n['container no'] || n['ctr'] || '').replace(/[\s-]/g, '').toUpperCase();
+            if (id) {
+                const isoType = String(n['type'] || n['iso type'] || n['container type'] || '').trim().toUpperCase();
+                const cargoDescription = String(n['cargo type'] || n['commodity'] || n['cargo'] || n['cargo description'] || '').trim();
+                const tempMatch = cargoDescription.match(/TEMP(:ERATURE)\s*[:\-]\s*([+-]\d+(:[.,]\d+))/i);
+                const temp = String(n['temp'] || n['temperature'] || (tempMatch  tempMatch[1].replace(',', '.') : '')).trim();
+                const item = {
+                    containerId:    id,
+                    vesselOrigem:  String(n['vessel origem'] || n['vessel'] || '').trim(),
+                    bookingNumber: String(n['booking number'] || n['booking #'] || n['booking'] || '').trim(),
+                    bookingParty:  String(n['booking party'] || n['customer'] || n['client'] || n['shipper'] || '').trim(),
+                    pod:           String(n['pod'] || n['port of discharge'] || n['fpod'] || n['t/s port'] || '').trim().toUpperCase(),
+                    pol:           String(n['pol'] || n['port of loading'] || '').trim().toUpperCase(),
+                    cargoType:     cargoDescription,
+                    size:          parseInt(n['size'] || n['container size']) || (isoType.startsWith('2')  20 : 40),
+                    type:          isoType,
+                    friendlyType:  CONFIG.getOperationalType(isoType, parseInt(n['size'] || n['container size']) || 0, ''),
+                    weight:        parseFloat(n['weight'] || n['gross weight']) || 0,
+                    temp,
+                    imo:           String(n['imo'] || n['imo class'] || n['imdg'] || n['dg'] || n['class'] || '').trim(),
+                    over:          String(n['over'] || n['oog'] || n['out of gauge'] || '').trim(),
+                    poo:           String(n['poo'] || '').trim().toUpperCase(),
+                    fpod:          String(n['fpod'] || '').trim().toUpperCase(),
+                    revenue:       parseFloat(n['revenue']) || 0,
+                };
+                map[id] = item;
+                rows.push(item);
+            }
+        });
+        return { map, rows }; // map by normalized container id + flat rows
+    },
+
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    // EDI PARSER (BAPLIE EDI format)
+    // Supports: LOC+147 (position), EQD (container+type),
+    //   MEA (weight), TMP (temperature), LOC+9 (POL), LOC+11/83 (POD)
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    parseEdi(text, mode = 'LOAD') {
+        const containers = [];
+        const content = text.replace(/\r\n|\r/g, '\n').replace(/\n/g, '');
+        const segments = content.split("'").map(s => s.trim()).filter(Boolean);
+        const isDischarge = String(mode || '').toUpperCase() === 'DISCHARGE';
+
+        let current = null;
+
+        segments.forEach(seg => {
+            const parts = seg.split('+');
+            const tag = parts[0];
+
+            if (tag === 'EQD') {
+                if (current && current.containerId) containers.push(current);
+                current = {
+                    containerId: String(parts[2] || '').split(':')[0].replace(/[\s-]/g, '').trim().toUpperCase(),
+                    type: String(parts[3] || '').split(':')[0].trim().toUpperCase(),
+                    slot: '', bay: 0, row: 0, tier: 0,
+                    size: 0, pol: '', pod: '', weight: 0,
+                    carrier: '', setting: '', full: '', delivery: '',
+                    isReefer: false, isNOR: false, isSpecial: false, isDry: true,
+                    isFull: false, isEmpty: false, isDeck: false,
+                    bookingNumber: '', bookingParty: '', temp: '', imo: '',
+                    poo: '', fpod: '', revenue: 0, vesselOrigem: '',
+                };
+                if (current.type) {
+                    current.size = current.type.startsWith('2')  20 : 40;
+                    current.friendlyType = CONFIG.getOperationalType(current.type, current.size, '');
+                    current.isReefer = CONFIG.isReeferType(current.type, current.size, current.friendlyType);
+                    current.isNOR = false;
+                    current.isSpecial = CONFIG.isSpecial(current.type);
+                    current.isDry = !current.isReefer && !current.isSpecial;
+                }
+                const eqdStatus = parts.slice(4).map(p => String(p || '').split(':')[0].trim().toUpperCase()).filter(Boolean);
+                current.full = eqdStatus.join(' ');
+                current.isFull = eqdStatus.includes('5') || eqdStatus.includes('F') || eqdStatus.includes('FULL');
+                current.isEmpty = eqdStatus.includes('4') || eqdStatus.includes('E') || eqdStatus.includes('EMPTY') || eqdStatus.includes('MTY');
+
+            } else if (tag === 'LOC' && parts[1] === '147' && current) {
+                const slot = String(parts[2] || '').split(':')[0].trim();
+                current.slot = slot;
+                const parsed = PARSER.parseSlot(slot, 0);
+                current.bay = parsed.bay;
+                current.row = parsed.row;
+                current.tier = parsed.tier;
+                current.isDeck = PARSER.isDeck(parsed.tier);
+
+            } else if (tag === 'LOC' && parts[1] === '9' && current) {
+                current.pol = String(parts[2] || '').split(':')[0].trim().toUpperCase();
+
+            } else if (tag === 'LOC' && (parts[1] === '11' || parts[1] === '83') && current) {
+                if (!current.pod) {
+                    current.pod = String(parts[2] || '').split(':')[0].trim().toUpperCase();
+                }
+
+            } else if (tag === 'MEA' && current) {
+                const val = parseFloat(String(parts[3] || parts[2] || 0).split(':').pop());
+                if (val > 0) current.weight = val;
+
+            } else if (tag === 'TMP' && current) {
+                current.temp = String(parts.slice(2).join('+') || '').trim();
+                current.setting = current.temp;
+                if (CONFIG.isReeferType(current.type, current.size, current.friendlyType)) {
+                    current.isReefer = true;
+                    current.isNOR = false;
+                    current.isDry = false;
+                }
+
+            } else if (tag === 'DGS' && current) {
+                current.imo = String(parts[2] || parts[1] || '').split(':')[0].trim().toUpperCase();
+                current.isSpecial = true;
+                current.isDry = false;
+
+            } else if (tag === 'FTX' && current) {
+                const txt = String(parts[4] || '').trim();
+                if (txt && !current.bookingNumber) current.bookingNumber = txt;
+            }
+        });
+
+        if (current && current.containerId) containers.push(current);
+        if (isDischarge) this.normalizeOperationalFlags(containers, 'DISCHARGE');
+        return containers.filter(c => c.containerId);
+    },
+
+    extractVesselInfo(containers = [], ediText = '', mode = 'LOAD') {
+        const info = {
+            vessel: '',
+            voyage: '',
+            port: String(mode || '').toUpperCase() === 'DISCHARGE'  'ARRIVAL' : 'LOAD',
+        };
+
+        const vesselOrigem = containers.map(c => c.vesselOrigem).find(Boolean);
+        if (vesselOrigem) {
+            const match = String(vesselOrigem).trim().match(/^(.+)\s*\/\s*([A-Z0-9-]+)$/i);
+            if (match) {
+                info.vessel = match[1].trim();
+                info.voyage = match[2].trim();
+            } else {
+                info.vessel = String(vesselOrigem).trim();
+            }
+        }
+
+        if (ediText) {
+            const content = ediText.replace(/\r\n|\r/g, '\n').replace(/\n/g, '');
+            const segments = content.split("'").map(s => s.trim()).filter(Boolean);
+            segments.forEach(seg => {
+                const parts = seg.split('+');
+                if (parts[0] === 'TDT') {
+                    if (parts[2]) info.voyage = String(parts[2]).trim() || info.voyage;
+                    const vesselPart = parts.find(p => p.includes('::'));
+                    if (vesselPart) {
+                        const vessel = vesselPart.split('::').pop().split(':')[0].trim();
+                        if (vessel) info.vessel = vessel;
+                    }
+                }
+                if (parts[0] === 'RFF' && String(parts[1] || '').startsWith('VON:')) {
+                    const voyage = String(parts[1]).split(':')[1].trim();
+                    if (voyage) info.voyage = voyage;
+                }
+                if (parts[0] === 'LOC' && (parts[1] === '5' || parts[1] === '61') && !info.portCode) {
+                    info.portCode = String(parts[2] || '').split(':')[0].trim().toUpperCase();
+                }
+            });
+        }
+
+        info.vessel = (info.vessel || 'VESSEL').toUpperCase();
+        info.voyage = (info.voyage || 'VOYAGE').toUpperCase();
+        return info;
+    },
+
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    // JOIN: merge commercial data into containers
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    joinCommercial(containers, moviesMap) {
+        containers.forEach(c => {
+            const matchId = c.containerId.replace(/[\s-]/g, '').toUpperCase();
+            const m = moviesMap[matchId];
+            if (m) {
+                c.vesselOrigem  = m.vesselOrigem  || c.vesselOrigem;
+                c.bookingNumber = m.bookingNumber || c.bookingNumber;
+                c.bookingParty  = m.bookingParty  || c.bookingParty;
+                c.bookingPod    = m.pod           || c.bookingPod || '';
+                c.bookingPol    = m.pol           || c.bookingPol || '';
+                c.pod           = c.pod           || m.pod || m.fpod || '';
+                c.pol           = c.pol           || m.pol || '';
+                c.cargoType     = m.cargoType     || c.cargoType || '';
+                c.bookingType   = m.friendlyType  || c.bookingType || '';
+                c.bookingWeight = m.weight        || c.bookingWeight || 0;
+                c.temp          = m.temp          || c.temp;
+                c.setting       = m.temp          || c.setting;
+                c.imo           = m.imo           || c.imo;
+                c.over          = m.over          || c.over || '';
+                c.poo           = m.poo           || c.poo;
+                c.fpod          = m.fpod          || c.fpod;
+                c.revenue       = m.revenue       || c.revenue;
+
+                // Final Reefer/NOR flags are applied by mode in normalizeOperationalFlags().
+            }
+        });
+        return containers;
+    },
+
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    // SLOT PARSER
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    hasValidTemp(value) {
+        const t = String(value || '').trim().toUpperCase();
+        if (t === '' || t === '0' || t === '0.0' || t === '000') return false;
+        if (/^[+-]0+(\.0+)($|:|\s)/.test(t)) return false;
+        return !t.includes('DRY') && !t.includes('NOR') && !t.includes('NO TEMP');
+    },
+
+    normalizeOperationalFlags(containers, mode = 'LOAD') {
+        const isDischarge = String(mode || '').toUpperCase() === 'DISCHARGE';
+        containers.forEach(c => {
+            const isReeferType = CONFIG.isReeferType(c.type, c.size, c.friendlyType) || /^RH/i.test(c.bookingType || '');
+            const hasTemp = this.hasValidTemp(c.temp) || this.hasValidTemp(c.setting);
+            const markerText = `${c.temp || ''} ${c.setting || ''} ${c.full || ''} ${c.cargoType || ''}`.toUpperCase();
+            const explicitNor = markerText.includes('NOR') || markerText.includes('NO TEMP') || markerText.includes('NON OPER');
+
+            if (isReeferType) {
+                c.isNOR = !hasTemp || explicitNor;
+                c.isReefer = !c.isNOR;
+                c.friendlyType = c.isNOR  (c.size >= 40  'HC40' : 'DC20') : (c.size >= 40  'RH40' : 'RH20');
+            } else {
+                c.isNOR = false;
+            }
+
+            if (!c.friendlyType || c.friendlyType === 'OTHER') {
+                c.friendlyType = CONFIG.getOperationalType(c.type, c.size, c.height);
+            }
+
+            const fullText = String(c.full || '').toUpperCase();
+            const explicitEmpty = c.isEmpty || /\b(E|EMPTY|MTY|4)\b/.test(fullText);
+            const explicitFull = c.isFull || /\b(F|FULL|5)\b/.test(fullText);
+            c.isEmpty = explicitEmpty;
+            c.isFull = explicitFull || (!explicitEmpty && Number(c.weight || 0) > 0);
+
+            const imoValue = String(c.imo || c.class || '').trim().toUpperCase();
+            const hasImo = imoValue !== '' && imoValue !== '0' && imoValue !== 'NONE' && imoValue !== 'NO';
+            if (hasImo) c.imo = imoValue;
+            c.isSpecial = CONFIG.isSpecial(c.type) || hasImo || !!c.over;
+            c.isDry = !c.isReefer && !c.isSpecial;
+            if (c.isNOR) c.isDry = true;
+        });
+        return containers;
+    },
+
+    parseSlot(slot, fallbackBay) {
+        const s = String(slot).trim().replace(/[^0-9]/g, '');
+
+        if (s.length === 6) {
+            return {
+                bay:  parseInt(s.substring(0, 2)) || parseInt(fallbackBay) || 0,
+                row:  parseInt(s.substring(2, 4)) || 0,
+                tier: parseInt(s.substring(4, 6)) || 0,
+            };
+        }
+        if (s.length === 7) {
+            return {
+                bay:  parseInt(s.substring(0, 3)) || parseInt(fallbackBay) || 0,
+                row:  parseInt(s.substring(3, 5)) || 0,
+                tier: parseInt(s.substring(5, 7)) || 0,
+            };
+        }
+        return {
+            bay:  parseInt(fallbackBay) || 0,
+            row:  1,
+            tier: 82,
+        };
+    },
+
+    isDeck(tier) {
+        return tier >= 80;
+    },
+
+    isReefer(type) {
+        if (!type) return false;
+        const t = String(type).toUpperCase();
+        // Standard ISO: 22R1, 45R1, etc. (R at 3rd pos)
+        // Or prefixes: RH, RE, RT
+        return t.includes('R') && (t.startsWith('R') || t.charAt(2) === 'R' || t.includes('RH') || t.includes('RE'));
+    },
+};
+
+</script>
+<script>
+/**
+ * mapper.js - Maps bay/row/tier to 3D world coordinates
+ */
+
+const OPS = {
+    normalizeId(id) {
+        return String(id || '').replace(/[\s-]/g, '').toUpperCase();
+    },
+    analyze(mode, containers, bookingRows, ediContainers) {
+        const opMode = mode || 'LOAD';
+        const reality = Array.isArray(containers)  containers : [];
+        const planned = Array.isArray(bookingRows)  bookingRows : [];
+        const byReality = {};
+        const byPlan = {};
+        reality.forEach(c => { byReality[this.normalizeId(c.containerId)] = c; });
+        planned.forEach(b => { byPlan[this.normalizeId(b.containerId)] = b; });
+        const missing = [];
+        const extra = [];
+        const podMismatch = [];
+        const typeMismatch = [];
+        const weightMismatch = [];
+        const criticalCargo = [];
+        planned.forEach(b => {
+            const c = byReality[this.normalizeId(b.containerId)];
+            if (!c) {
+                missing.push({ booking: b, containerId: b.containerId });
+                return;
+            }
+            const planPod = String(b.pod || b.fpod || '').toUpperCase();
+            const realPod = String(c.pod || '').toUpperCase();
+            if (planPod && realPod && planPod !== realPod) podMismatch.push({ container: c, booking: b, expected: planPod, actual: realPod });
+            if (b.friendlyType && c.friendlyType && b.friendlyType !== 'OTHER' && c.friendlyType !== 'OTHER' && b.friendlyType !== c.friendlyType) typeMismatch.push({ container: c, booking: b, expected: b.friendlyType, actual: c.friendlyType });
+            if (b.weight && c.weight && Math.abs(b.weight - c.weight) > 1500) weightMismatch.push({ container: c, booking: b, expected: b.weight, actual: c.weight });
+        });
+        reality.forEach(c => {
+            if (!byPlan[this.normalizeId(c.containerId)]) extra.push({ container: c, containerId: c.containerId });
+            if (c.isReefer || c.isNOR || c.imo || c.over || c.isSpecial) criticalCargo.push(c);
+        });
+        const teu = reality.reduce((s, c) => s + (c.size >= 40  2 : 1), 0);
+        const plannedTeu = planned.reduce((s, b) => {
+            const marker = `${b.type || ''} ${b.friendlyType || ''}`;
+            return s + ((b.size && b.size < 40) || marker.includes('20') || marker.startsWith('2')  1 : 2);
+        }, 0);
+        const byPod = {};
+        reality.forEach(c => {
+            const pod = c.pod || 'UNKNOWN';
+            if (!byPod[pod]) byPod[pod] = { pod, total: 0, teu: 0, reefer: 0, nor: 0, special: 0, imo: 0, ot: 0, fr: 0, missing: 0, extra: 0, typeCount: {}, containerIds: [] };
+            byPod[pod].total += 1;
+            byPod[pod].teu += c.size >= 40  2 : 1;
+            if (c.isReefer && !c.isNOR) byPod[pod].reefer += 1;
+            if (c.isNOR) byPod[pod].nor += 1;
+            if (c.imo) byPod[pod].imo += 1;
+            
+            const ft = c.friendlyType;
+            if (ft.startsWith('OT')) byPod[pod].ot += 1;
+            if (ft.startsWith('FR')) byPod[pod].fr += 1;
+            if (c.isSpecial || c.imo || c.over) byPod[pod].special += 1;
+
+            // Type breakdown for "Containeres, type, Qtd"
+            const tKey = c.friendlyType;
+            byPod[pod].typeCount[tKey] = (byPod[pod].typeCount[tKey] || 0) + 1;
+            byPod[pod].containerIds.push(c.containerId);
+        });
+        missing.forEach(m => {
+            const pod = (m.booking && (m.booking.pod || m.booking.fpod)) || 'UNKNOWN';
+            if (!byPod[pod]) byPod[pod] = { pod, total: 0, teu: 0, reefer: 0, special: 0, missing: 0, extra: 0 };
+            byPod[pod].missing += 1;
+        });
+        extra.forEach(e => {
+            const pod = (e.container && e.container.pod) || 'UNKNOWN';
+            if (!byPod[pod]) byPod[pod] = { pod, total: 0, teu: 0, reefer: 0, special: 0, missing: 0, extra: 0 };
+            byPod[pod].extra += 1;
+        });
+        const issues = [];
+        missing.forEach(m => issues.push({ level: 'critical', type: opMode === 'DISCHARGE'  'Missing discharge' : 'Shortfall / no-show', title: m.containerId, detail: `Booking ${m.booking.bookingNumber || '-'} | POD ${m.booking.pod || m.booking.fpod || '-'} | commercial planning issue` }));
+        extra.forEach(e => issues.push({ level: 'warning', type: opMode === 'DISCHARGE'  'Extra discharged' : 'Extra loaded', title: e.containerId, detail: `BAPLIE reality without booking | POD ${(e.container && e.container.pod) || '-'} | operational execution issue` }));
+        podMismatch.forEach(x => issues.push({ level: 'critical', type: 'POD divergence', title: x.container.containerId, detail: `Booking ${x.expected} vs BAPLIE ${x.actual} | documentation risk` }));
+        typeMismatch.forEach(x => issues.push({ level: 'warning', type: 'Type divergence', title: x.container.containerId, detail: `Booking ${x.expected} vs BAPLIE ${x.actual}` }));
+        weightMismatch.forEach(x => issues.push({ level: 'warning', type: 'Weight divergence', title: x.container.containerId, detail: `Booking ${(x.expected / 1000).toFixed(1)}t vs BAPLIE ${(x.actual / 1000).toFixed(1)}t` }));
+        reality.filter(c => c.isNOR).forEach(c => issues.push({ level: 'critical', type: 'NOR reefer', title: c.containerId, detail: `Reefer without temperature/setpoint | POD ${c.pod || '-'} | temperature documentation required` }));
+        const totalNOR = reality.filter(c => c.isNOR).length;
+        const bottlenecks = Object.values(byPod).sort((a, b) => {
+            let idxA = CONFIG.ROTATION.indexOf(a.pod);
+            let idxB = CONFIG.ROTATION.indexOf(b.pod);
+            if (idxA === -1) idxA = 999;
+            if (idxB === -1) idxB = 999;
+            return idxA - idxB || a.pod.localeCompare(b.pod);
+        });
+        const impact = missing.length + extra.length + podMismatch.length;
+        return {
+            mode: opMode,
+            total: reality.length,
+            teu,
+            totalNOR,
+            planned: planned.length,
+            plannedTeu,
+            utilization: plannedTeu  Math.round((teu / plannedTeu) * 100) : 100,
+            missing,
+            extra,
+            podMismatch,
+            typeMismatch,
+            weightMismatch,
+            criticalCargo,
+            issues,
+            bottlenecks,
+            status: impact === 0  'Controlled' : impact > 10  'Critical' : 'Attention',
+            ediPriority: Array.isArray(ediContainers) && ediContainers.length > 0
+        };
+    },
+};
+
+const MAPPER = {
+
+    // Build world coords for all containers given sorted bay/row/tier lists
+    buildLayout(containers) {
+        const S = CONFIG.SCENE;
+
+        // Sorted unique bays
+        const uniqueBays = [...new Set(containers.map(c => c.bay))].sort((a, b) => a - b);
+
+        // Bay X positions: each bay slot is L_20 wide, 40' takes same center
+        const bayX = {};
+        let xCursor = 0;
+        uniqueBays.forEach(bay => {
+            // determine if any container in this bay is 40'
+            const has40 = containers.some(c => c.bay === bay && c.size >= 40);
+            const slotLen = has40  S.CONTAINER_L_40 : S.CONTAINER_L_20;
+            bayX[bay] = xCursor + slotLen / 2;
+            xCursor += slotLen + S.BAY_GAP;
+        });
+
+        // Row Z positions: row 00 = 0, row 01 = right, row 02 = left, etc.
+        const uniqueRows = [...new Set(containers.map(c => c.row))].sort((a, b) => a - b);
+        const rowZ = {};
+        uniqueRows.forEach(row => {
+            // Sign: odd rows to starboard (+Z), even to port (-Z)
+            const index = Math.ceil(row / 2);
+            const sign = row % 2 === 0  -1 : 1;
+            rowZ[row] = sign * index * (S.CONTAINER_W_20 + S.ROW_GAP);
+        });
+        // Row 0 is centerline
+        rowZ[0] = 0;
+
+        // Tier Y positions
+        // Hold tiers: < 80 -> Y negative
+        // Deck tiers: >= 80 -> Y positive
+        const uniqueTiers = [...new Set(containers.map(c => c.tier))].sort((a,b) => a-b);
+        const holdTiersSorted = uniqueTiers.filter(t => t < 80);
+        const deckTiersSorted = uniqueTiers.filter(t => t >= 80);
+        const tierY = {};
+        holdTiersSorted.forEach((t, i) => {
+            tierY[t] = S.HOLD_BASE_Y + i * (S.CONTAINER_H + S.TIER_GAP);
+        });
+        deckTiersSorted.forEach((t, i) => {
+            tierY[t] = S.DECK_BASE_Y + i * (S.CONTAINER_H + S.TIER_GAP);
+        });
+
+        // Total vessel X extent for centering
+        const totalX = xCursor;
+
+        // Assign world positions
+        containers.forEach(c => {
+            const x = (bayX[c.bay] || 0) - totalX / 2;
+            const z = rowZ[c.row] !== undefined  rowZ[c.row] : 0;
+
+            // Tier lookup
+            let y = tierY[c.tier];
+            if (y === undefined) {
+                // Unknown tier: infer from isDeck
+                y = c.isDeck  0 : S.HOLD_BASE_Y;
+            }
+
+            c._worldX = x;
+            c._worldY = y;
+            c._worldZ = z;
+            c._lenX = c.size >= 40  S.CONTAINER_L_40 : S.CONTAINER_L_20;
+            c._lenY = S.CONTAINER_H;
+            c._lenZ = S.CONTAINER_W_20;
+        });
+
+        return { bayX, rowZ, tierY, totalX };
+    },
+
+    // Get 3D color for a container based on mode
+    getColor(container, mode) {
+        const C = CONFIG.COLORS;
+        switch (mode) {
+            case 'type':
+                return C.type[container.friendlyType] || C.type['OTHER'];
+
+            case 'pol':
+                return C.pol[container.pol] || CONFIG.colorFromKey(container.pol, 'POL');
+
+            case 'pod':
+                return C.pod[container.pod] || CONFIG.colorFromKey(container.pod, 'POD');
+
+            case 'client': {
+                const client = container.bookingParty;
+                if (!client) return 0x334155;
+                let hash = 0;
+                for (let i = 0; i < client.length; i++) {
+                    hash = client.charCodeAt(i) + ((hash << 5) - hash);
+                }
+                const hue = Math.abs(hash) % 360;
+                return new THREE.Color().setHSL(hue / 360, 0.65, 0.48).getHex();
+            }
+
+            case 'fullEmpty':
+                if (container.isFull) return C.fullEmpty['Full'];
+                if (container.isEmpty) return C.fullEmpty['Empty'];
+                return 0x475569;
+
+            case 'reeferDry':
+                if (container.isReefer && !container.isNOR) return C.reeferDry['reefer'];
+                if (container.isSpecial) return C.reeferDry['special'];
+                return C.reeferDry['dry'];
+
+            case 'specials': {
+                const category = CONFIG.getSpecialCategory(container);
+                return C.specials[category] || C.specials['OTHER'];
+            }
+
+            case 'weight': {
+                const w = container.weight; // kg
+                if (w < 5000)  return 0x3b82f6;
+                if (w < 15000) return 0x10b981;
+                if (w < 25000) return 0xf59e0b;
+                return 0xef4444;
+            }
+
+            case 'carrier':
+                return C.carrier[container.carrier] || C.carrier['_default'];
+
+            default:
+                return C.type[container.friendlyType] || C.type['OTHER'];
+        }
+    },
+};
+
+</script>
+<script>
+/**
+ * scene.js - Three.js scene, camera, lights, container rendering
+ * Uses InstancedMesh for performance with large datasets.
+ */
+
+const SCENE = {
+    renderer: null,
+    scene: null,
+    camera: null,
+    controls: null,
+    raycaster: null,
+    mouse: null,
+    containerRef: [],     // parallel to instancedMesh instances
+    meshes: [],           // all InstancedMesh objects (one per size)
+    labelObjects: [],     // CSS-style labels (THREE.Sprite)
+    structureMeshes: [],  // hull/grid objects
+    showLabels: true,
+    showStructure: true,
+    _highlighted: -1,
+    _animFrame: null,
+
+    init(domContainer) {
+        const W = domContainer.clientWidth;
+        const H = domContainer.clientHeight;
+
+        // Renderer
+        this.renderer = new THREE.WebGLRenderer({ antialias: true });
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.renderer.setSize(W, H);
+        this.renderer.setClearColor(0xe2e8f0, 1);
+        this.renderer.shadowMap.enabled = true;
+        domContainer.appendChild(this.renderer.domElement);
+
+        // Scene
+        this.scene = new THREE.Scene();
+        this.scene.fog = new THREE.FogExp2(0xe2e8f0, 0.005);
+
+        // Camera
+        this.camera = new THREE.PerspectiveCamera(55, W / H, 0.1, 500);
+        this.camera.position.set(0, 18, 40);
+        this.camera.lookAt(0, 0, 0);
+
+        // Orbit Controls (inline implementation)
+        this._initOrbitControls(domContainer);
+
+        // Lights
+        this._initLights();
+
+        // Raycaster
+        this.raycaster = new THREE.Raycaster();
+        this.mouse = new THREE.Vector2(-9999, -9999);
+
+        // Resize
+        window.addEventListener('resize', () => this._onResize(domContainer));
+
+        // Start render loop
+        this._animate();
+    },
+
+    _initLights() {
+        const ambient = new THREE.AmbientLight(0x1a2a3a, 0.8);
+        this.scene.add(ambient);
+
+        const sun = new THREE.DirectionalLight(0xd4e8ff, 1.4);
+        sun.position.set(20, 40, 20);
+        sun.castShadow = true;
+        sun.shadow.mapSize.width = 2048;
+        sun.shadow.mapSize.height = 2048;
+        this.scene.add(sun);
+
+        const fill = new THREE.DirectionalLight(0x2244aa, 0.4);
+        fill.position.set(-20, 10, -10);
+        this.scene.add(fill);
+
+        const rim = new THREE.PointLight(0x0088ff, 0.6, 80);
+        rim.position.set(0, 20, -30);
+        this.scene.add(rim);
+    },
+
+    _initOrbitControls(dom) {
+        // Minimal orbit controls implementation
+        let isPointerDown = false;
+        let lastX = 0, lastY = 0;
+        let mode = ''; // 'rotate' | 'pan'
+        let spherical = { theta: 0, phi: Math.PI / 3, radius: 50 };
+        let target = new THREE.Vector3(0, 0, 0);
+
+        const updateCamera = () => {
+            const x = target.x + spherical.radius * Math.sin(spherical.phi) * Math.sin(spherical.theta);
+            const y = target.y + spherical.radius * Math.cos(spherical.phi);
+            const z = target.z + spherical.radius * Math.sin(spherical.phi) * Math.cos(spherical.theta);
+            this.camera.position.set(x, y, z);
+            this.camera.lookAt(target);
+        };
+        updateCamera();
+
+        this._orbitUpdate = updateCamera;
+        this._spherical = spherical;
+        this._orbitTarget = target;
+
+        dom.addEventListener('pointerdown', e => {
+            isPointerDown = true;
+            lastX = e.clientX; lastY = e.clientY;
+            mode = e.button === 2 || e.ctrlKey  'pan' : 'rotate';
+        });
+        window.addEventListener('pointerup', () => { isPointerDown = false; });
+        dom.addEventListener('pointermove', e => {
+            if (!isPointerDown) return;
+            const dx = (e.clientX - lastX) * 0.005;
+            const dy = (e.clientY - lastY) * 0.005;
+            lastX = e.clientX; lastY = e.clientY;
+
+            if (mode === 'rotate') {
+                spherical.theta -= dx;
+                spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi + dy));
+            } else {
+                // Pan
+                const right = new THREE.Vector3();
+                const up = new THREE.Vector3();
+                right.crossVectors(this.camera.getWorldDirection(new THREE.Vector3()), new THREE.Vector3(0,1,0)).normalize();
+                target.addScaledVector(right, -dx * spherical.radius * 0.5);
+                target.y += dy * spherical.radius * 0.3;
+            }
+            updateCamera();
+        });
+        dom.addEventListener('wheel', e => {
+            e.preventDefault();
+            spherical.radius = Math.max(5, Math.min(200, spherical.radius + e.deltaY * 0.05));
+            updateCamera();
+        }, { passive: false });
+        dom.addEventListener('contextmenu', e => e.preventDefault());
+    },
+
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    // VESSEL STRUCTURE
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    buildStructure(containers, layoutData) {
+        // Clear existing structure
+        this.structureMeshes.forEach(m => this.scene.remove(m));
+        this.structureMeshes = [];
+
+        const { totalX, bayX } = layoutData;
+        const S = CONFIG.SCENE;
+
+        // AutoCAD style cyan lines
+        const cadBlue = 0x003366;
+        const cadDarkBlue = 0x64748b;
+        const matOuter = new THREE.LineBasicMaterial({ color: cadBlue, transparent: true, opacity: 0.8 });
+        const matInner = new THREE.LineBasicMaterial({ color: cadDarkBlue, transparent: true, opacity: 0.4 });
+        
+        const ptsOuter = [];
+        const ptsInner = [];
+
+        function addOuter(x1,y1,z1, x2,y2,z2) {
+            ptsOuter.push(new THREE.Vector3(x1,y1,z1), new THREE.Vector3(x2,y2,z2));
+        }
+        function addInner(x1,y1,z1, x2,y2,z2) {
+            ptsInner.push(new THREE.Vector3(x1,y1,z1), new THREE.Vector3(x2,y2,z2));
+        }
+
+        // 1. Find Global Vessel Bounds
+        let minX = 9999, maxX = -9999, minZ = 9999, maxZ = -9999, minY = 9999;
+        const baysMap = {};
+
+        containers.forEach(c => {
+            const hw = c._lenX / 2;
+            const hz = c._lenZ / 2;
+            const hy = c._lenY / 2;
+            minX = Math.min(minX, c._worldX - hw);
+            maxX = Math.max(maxX, c._worldX + hw);
+            minZ = Math.min(minZ, c._worldZ - hz);
+            maxZ = Math.max(maxZ, c._worldZ + hz);
+            if (!c.isDeck) {
+                minY = Math.min(minY, c._worldY - hy);
+            }
+
+            // Group by bay for cross sections
+            if (!baysMap[c.bay]) {
+                baysMap[c.bay] = { x: c._worldX, minZ: 999, maxZ: -999, holdMinY: 999, hasHold: false, has40: false };
+            }
+            const b = baysMap[c.bay];
+            b.minZ = Math.min(b.minZ, c._worldZ - hz);
+            b.maxZ = Math.max(b.maxZ, c._worldZ + hz);
+            if (c.size >= 40) b.has40 = true;
+            if (!c.isDeck) {
+                b.hasHold = true;
+                b.holdMinY = Math.min(b.holdMinY, c._worldY - hy);
+            }
+        });
+
+        if (minY === 9999) minY = S.HOLD_BASE_Y; // Default Keel if no hold containers
+        const deckY = S.DECK_BASE_Y - 0.2;
+        const keelY = minY - 0.5;
+        const beamW = (maxZ - minZ) + 2;
+        const hw = beamW / 2;
+
+        if (beamW <= 2) return; // No valid containers to draw ship around
+
+        // 2. Draw Vessel Hull Outline (AutoCAD wireframe)
+        const sternX = minX - 12;
+        const bowX = maxX + 25;
+        const bowY = deckY + 3;
+
+        // Save bounds for camera framing
+        const cameraMinX = Math.min(sternX, minX);
+        const cameraMaxX = Math.max(bowX, maxX);
+        const cameraMinY = keelY;
+        const cameraMaxY = deckY + 20;
+        const cameraMinZ = -Math.max(hw + 2, Math.abs(minZ));
+        const cameraMaxZ = Math.max(hw + 2, Math.abs(maxZ));
+        this._shipBounds = {
+            minX: cameraMinX, maxX: cameraMaxX,
+            minY: cameraMinY, maxY: cameraMaxY,
+            minZ: cameraMinZ, maxZ: cameraMaxZ,
+        };
+        this._shipCenter = new THREE.Vector3(
+            (cameraMinX + cameraMaxX) / 2,
+            (cameraMinY + cameraMaxY) / 2,
+            (cameraMinZ + cameraMaxZ) / 2
+        );
+
+        // Deck edges
+        addOuter(sternX, deckY, hw, maxX, deckY, hw); // Stb
+        addOuter(sternX, deckY, -hw, maxX, deckY, -hw); // Port
+        addOuter(sternX, deckY, hw, sternX, deckY, -hw); // Stern
+        addOuter(maxX, deckY, hw, bowX, bowY, 0); // Bow Stb
+        addOuter(maxX, deckY, -hw, bowX, bowY, 0); // Bow Port
+
+        // Keel edges (tapered)
+        const kw = hw * 0.6;
+        addOuter(sternX, keelY, kw, maxX, keelY, kw);
+        addOuter(sternX, keelY, -kw, maxX, keelY, -kw);
+        addOuter(sternX, keelY, kw, sternX, keelY, -kw);
+        addOuter(maxX, keelY, kw, bowX, bowY, 0);
+        addOuter(maxX, keelY, -kw, bowX, bowY, 0);
+
+        // Stern profile
+        addOuter(sternX, deckY, hw, sternX, keelY, kw);
+        addOuter(sternX, deckY, -hw, sternX, keelY, -kw);
+
+        // 3. Accommodation Block (Bridge)
+        const brX1 = sternX + 2;
+        const brX2 = sternX + 8;
+        const brY = deckY + 14;
+        
+        // Main block
+        addOuter(brX1, deckY, hw, brX1, brY, hw);
+        addOuter(brX1, deckY, -hw, brX1, brY, -hw);
+        addOuter(brX2, deckY, hw, brX2, brY, hw);
+        addOuter(brX2, deckY, -hw, brX2, brY, -hw);
+        
+        addOuter(brX1, brY, hw, brX2, brY, hw);
+        addOuter(brX1, brY, -hw, brX2, brY, -hw);
+        addOuter(brX1, brY, hw, brX1, brY, -hw);
+        addOuter(brX2, brY, hw, brX2, brY, -hw);
+
+        // Bridge wings
+        addOuter(brX1, brY-3, hw, brX1, brY-3, hw+2);
+        addOuter(brX2, brY-3, hw, brX2, brY-3, hw+2);
+        addOuter(brX1, brY-3, hw+2, brX2, brY-3, hw+2);
+
+        addOuter(brX1, brY-3, -hw, brX1, brY-3, -hw-2);
+        addOuter(brX2, brY-3, -hw, brX2, brY-3, -hw-2);
+        addOuter(brX1, brY-3, -hw-2, brX2, brY-3, -hw-2);
+
+        // Funnel
+        addOuter(brX1-1, brY, 2, brX1-1, brY+6, 1);
+        addOuter(brX1-1, brY, -2, brX1-1, brY+6, -1);
+        addOuter(brX1+3, brY, 2, brX1+3, brY+6, 1);
+        addOuter(brX1+3, brY, -2, brX1+3, brY+6, -1);
+        addOuter(brX1-1, brY+6, 1, brX1+3, brY+6, 1);
+        addOuter(brX1-1, brY+6, -1, brX1+3, brY+6, -1);
+        addOuter(brX1-1, brY+6, 1, brX1-1, brY+6, -1);
+        addOuter(brX1+3, brY+6, 1, brX1+3, brY+6, -1);
+
+        // 4. Draw Bay Cross-Sections (Bulkheads and Hatches)
+        const uniqueBays = Object.keys(baysMap).map(Number).sort((a,b)=>a-b);
+        uniqueBays.forEach((bay) => {
+            const b = baysMap[bay];
+            const x = b.x;
+            const bayLen = b.has40  S.CONTAINER_L_40 : S.CONTAINER_L_20;
+            const bz = hw; // Use vessel beam for bulkheads
+
+            // Transverse Frame (Bulkhead) ahead of bay
+            const fX = x + bayLen/2 + S.BAY_GAP/2;
+            
+            // Frame outline (U-shape)
+            addInner(fX, deckY, bz, fX, keelY, kw);
+            addInner(fX, deckY, -bz, fX, keelY, -kw);
+            addInner(fX, keelY, kw, fX, keelY, -kw);
+            addInner(fX, deckY, bz, fX, deckY, -bz); // cross deck
+
+            // Hatch Opening (inner outline matching max hold dims)
+            if (b.hasHold) {
+                // Hatch cover outline
+                addOuter(x - bayLen/2, deckY, b.maxZ + 0.2, x + bayLen/2, deckY, b.maxZ + 0.2);
+                addOuter(x - bayLen/2, deckY, b.minZ - 0.2, x + bayLen/2, deckY, b.minZ - 0.2);
+                addOuter(x - bayLen/2, deckY, b.maxZ + 0.2, x - bayLen/2, deckY, b.minZ - 0.2);
+                addOuter(x + bayLen/2, deckY, b.maxZ + 0.2, x + bayLen/2, deckY, b.minZ - 0.2);
+
+                // Hold cell guides (vertical lines)
+                addInner(x - bayLen/2, deckY, b.maxZ + 0.2, x - bayLen/2, b.holdMinY, b.maxZ + 0.2);
+                addInner(x - bayLen/2, deckY, b.minZ - 0.2, x - bayLen/2, b.holdMinY, b.minZ - 0.2);
+                addInner(x + bayLen/2, deckY, b.maxZ + 0.2, x + bayLen/2, b.holdMinY, b.maxZ + 0.2);
+                addInner(x + bayLen/2, deckY, b.minZ - 0.2, x + bayLen/2, b.holdMinY, b.minZ - 0.2);
+            }
+
+            // Bay Number Sprite (Cad style text)
+            const sprite = this._makeTextSprite(`BAY ${String(bay).padStart(2, '0')}`, {
+                color: '#003366', size: 24, bg: 'transparent',
+            });
+            sprite.position.set(x, keelY - 2, 0); 
+            sprite.scale.set(4, 2, 1);
+            this.scene.add(sprite);
+            this.structureMeshes.push(sprite);
+        });
+
+        // Add to Scene
+        const geoOuter = new THREE.BufferGeometry().setFromPoints(ptsOuter);
+        const meshOuter = new THREE.LineSegments(geoOuter, matOuter);
+        this.scene.add(meshOuter);
+        this.structureMeshes.push(meshOuter);
+
+        const geoInner = new THREE.BufferGeometry().setFromPoints(ptsInner);
+        const meshInner = new THREE.LineSegments(geoInner, matInner);
+        this.scene.add(meshInner);
+        this.structureMeshes.push(meshInner);
+
+        // Centerline Keel
+        const geoCenter = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(sternX, deckY, 0), new THREE.Vector3(bowX, bowY, 0),
+            new THREE.Vector3(sternX, keelY, 0), new THREE.Vector3(maxX, keelY, 0)
+        ]);
+        const meshCenter = new THREE.LineSegments(geoCenter, new THREE.LineDashedMaterial({ color: 0x003366, dashSize: 1, gapSize: 0.5, transparent: true, opacity: 0.4 }));
+        meshCenter.computeLineDistances();
+        this.scene.add(meshCenter);
+        this.structureMeshes.push(meshCenter);
+
+        // Add a nice global grid at the bottom (like a blueprint grid)
+        const gridHelper = new THREE.GridHelper(400, 100, 0x94a3b8, 0xcbd5e1);
+        gridHelper.position.y = keelY - 5;
+        this.scene.add(gridHelper);
+        this.structureMeshes.push(gridHelper);
+    },
+
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    // CONTAINER RENDERING - InstancedMesh per container category
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    buildContainers(containers, colorMode) {
+        // Clear previous
+        this.meshes.forEach(m => this.scene.remove(m));
+        this.meshes = [];
+        this.containerRef = [];
+        this.labelObjects.forEach(l => this.scene.remove(l));
+        this.labelObjects = [];
+        if (this.containerWireframes) {
+            this.scene.remove(this.containerWireframes);
+            this.containerWireframes = null;
+        }
+
+        if (!containers.length) return;
+
+        const S = CONFIG.SCENE;
+
+        // Group into 20' and 40'
+        const c20 = containers.filter(c => c.size < 40);
+        const c40 = containers.filter(c => c.size >= 40);
+
+        this._buildInstancedGroup(c20, new THREE.BoxGeometry(S.CONTAINER_L_20 - 0.08, S.CONTAINER_H - 0.06, S.CONTAINER_W_20 - 0.08), colorMode);
+        this._buildInstancedGroup(c40, new THREE.BoxGeometry(S.CONTAINER_L_40 - 0.08, S.CONTAINER_H - 0.06, S.CONTAINER_W_40 - 0.08), colorMode);
+
+        // Build one giant LineSegments for all container wireframes (ghost lines)
+        const wirePts = [];
+        containers.forEach(c => {
+            const hw = (c.size >= 40  S.CONTAINER_L_40 : S.CONTAINER_L_20) / 2;
+            const hh = S.CONTAINER_H / 2;
+            const hd = S.CONTAINER_W_20 / 2;
+            const x = c._worldX;
+            const y = c._worldY + hh;
+            const z = c._worldZ;
+
+            // 8 corners
+            const p = [
+                new THREE.Vector3(x-hw, y-hh, z-hd), new THREE.Vector3(x+hw, y-hh, z-hd),
+                new THREE.Vector3(x+hw, y-hh, z+hd), new THREE.Vector3(x-hw, y-hh, z+hd),
+                new THREE.Vector3(x-hw, y+hh, z-hd), new THREE.Vector3(x+hw, y+hh, z-hd),
+                new THREE.Vector3(x+hw, y+hh, z+hd), new THREE.Vector3(x-hw, y+hh, z+hd),
+            ];
+            // Bottom
+            wirePts.push(p[0],p[1], p[1],p[2], p[2],p[3], p[3],p[0]);
+            // Top
+            wirePts.push(p[4],p[5], p[5],p[6], p[6],p[7], p[7],p[4]);
+            // Pillars
+            wirePts.push(p[0],p[4], p[1],p[5], p[2],p[6], p[3],p[7]);
+        });
+        const wireGeo = new THREE.BufferGeometry().setFromPoints(wirePts);
+        const wireMat = new THREE.LineBasicMaterial({ color: 0x94a3b8, transparent: true, opacity: 0.35 });
+        this.containerWireframes = new THREE.LineSegments(wireGeo, wireMat);
+        this.scene.add(this.containerWireframes);
+
+        // Build labels for visible containers (limit to 200 for perf)
+        if (this.showLabels) {
+            const toLabel = containers.slice(0, 200);
+            toLabel.forEach(c => {
+                const sp = this._makeTextSprite(c.containerId, { color: '#0f172a', size: 16, bg: 'rgba(226,232,240,0.6)' });
+                sp.position.set(c._worldX, c._worldY + S.CONTAINER_H / 2 + 0.3, c._worldZ);
+                sp.scale.set(2.5, 0.7, 1);
+                this.scene.add(sp);
+                this.labelObjects.push(sp);
+            });
+        }
+    },
+
+    _buildInstancedGroup(containers, geo, colorMode) {
+        if (!containers.length) return;
+
+        const mat = new THREE.MeshStandardMaterial({
+            metalness: 0.3, roughness: 0.55,
+            vertexColors: false,
+        });
+        const mesh = new THREE.InstancedMesh(geo, mat, containers.length);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+
+        const dummy = new THREE.Object3D();
+        const color = new THREE.Color();
+
+        containers.forEach((c, i) => {
+            dummy.position.set(c._worldX, c._worldY + geo.parameters.height / 2, c._worldZ);
+            dummy.rotation.set(0, 0, 0);
+            dummy.scale.set(1, 1, 1);
+            dummy.updateMatrix();
+            mesh.setMatrixAt(i, dummy.matrix);
+
+            const hex = MAPPER.getColor(c, colorMode);
+            color.setHex(hex);
+            mesh.setColorAt(i, color);
+
+            // Store reference for picking
+            c._meshIndex = i;
+            c._meshRef = mesh;
+        });
+
+        mesh.instanceMatrix.needsUpdate = true;
+        if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+
+        // Tag for raycasting
+        mesh.userData.containers = containers;
+        this.scene.add(mesh);
+        this.meshes.push(mesh);
+        this.containerRef.push(...containers);
+    },
+
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    // UPDATE COLORS (without rebuilding geometry)
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    updateColors(colorMode, visibleContainers) {
+        const color = new THREE.Color();
+        const visSet = new Set(visibleContainers.map(c => OPS.normalizeId(c.containerId)));
+        const dummy = new THREE.Object3D();
+        const S = CONFIG.SCENE;
+
+        this.meshes.forEach(mesh => {
+            const containers = mesh.userData.containers;
+            if (!containers) return;
+            
+            containers.forEach((c, i) => {
+                if (!visSet.has(OPS.normalizeId(c.containerId))) {
+                    // Hide solid mesh (scale 0), leaving only the wireframe visible
+                    dummy.position.set(0,0,0);
+                    dummy.scale.set(0, 0, 0);
+                    dummy.updateMatrix();
+                    mesh.setMatrixAt(i, dummy.matrix);
+                } else {
+                    // Show solid mesh
+                    dummy.position.set(c._worldX, c._worldY + S.CONTAINER_H / 2, c._worldZ);
+                    dummy.rotation.set(0,0,0);
+                    dummy.scale.set(1, 1, 1);
+                    dummy.updateMatrix();
+                    mesh.setMatrixAt(i, dummy.matrix);
+
+                    const hex = MAPPER.getColor(c, colorMode);
+                    color.setHex(hex);
+                    mesh.setColorAt(i, color);
+                }
+            });
+            
+            mesh.instanceMatrix.needsUpdate = true;
+            if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+        });
+    },
+
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    // HIGHLIGHT a single container
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    highlight(container, colorMode, allContainers) {
+        const bright = new THREE.Color(0xffffff);
+        const base = new THREE.Color(MAPPER.getColor(container, colorMode));
+        base.lerp(bright, 0.5);
+
+        if (container._meshRef) {
+            container._meshRef.setColorAt(container._meshIndex, base);
+            if (container._meshRef.instanceColor) container._meshRef.instanceColor.needsUpdate = true;
+        }
+    },
+
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    // FOCUS CAMERA on a container or bay
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    focusContainer(container) {
+        const target = new THREE.Vector3(container._worldX, container._worldY, container._worldZ);
+        this._orbitTarget.copy(target);
+        this._spherical.radius = 15;
+        this._orbitUpdate();
+    },
+
+    focusBay(bay, containers) {
+        const inBay = containers.filter(c => c.bay === bay);
+        if (!inBay.length) return;
+        const cx = inBay.reduce((s, c) => s + c._worldX, 0) / inBay.length;
+        const cy = inBay.reduce((s, c) => s + c._worldY, 0) / inBay.length;
+        this._orbitTarget.set(cx, cy, 0);
+        this._spherical.radius = 20;
+        this._orbitUpdate();
+    },
+
+    resetCamera() {
+        const center = this._shipCenter || new THREE.Vector3(0, 0, 0);
+        const bounds = this._shipBounds;
+        const spanX = bounds  Math.max(40, bounds.maxX - bounds.minX) : 120;
+        const spanZ = bounds  Math.max(18, bounds.maxZ - bounds.minZ) : 30;
+        const spanY = bounds  Math.max(18, bounds.maxY - bounds.minY) : 25;
+        this._spherical.theta = 0;
+        this._spherical.phi = Math.PI / 2.75;
+        this._spherical.radius = Math.max(70, Math.min(190, Math.max(spanX * 0.82, spanZ * 3.0, spanY * 3.2)));
+        this._orbitTarget.set(center.x, center.y - spanY * 0.18, center.z);
+        this._orbitUpdate();
+    },
+
+    setCameraFront() {
+        const center = this._shipCenter || new THREE.Vector3(0, 0, 0);
+        const bounds = this._shipBounds;
+        const spanX = bounds  Math.max(40, bounds.maxX - bounds.minX) : 120;
+        this._spherical.theta = 0;
+        this._spherical.phi = Math.PI / 2;
+        this._spherical.radius = Math.max(80, Math.min(200, spanX * 0.95));
+        this._orbitTarget.set(center.x, center.y * 0.35, center.z);
+        this._orbitUpdate();
+    },
+    setCameraSide() {
+        const center = this._shipCenter || new THREE.Vector3(0, 0, 0);
+        const bounds = this._shipBounds;
+        const spanX = bounds  Math.max(40, bounds.maxX - bounds.minX) : 120;
+        this._spherical.theta = Math.PI / 2;
+        this._spherical.phi = Math.PI / 2.5;
+        this._spherical.radius = Math.max(80, Math.min(220, spanX * 0.95));
+        this._orbitTarget.set(center.x, center.y * 0.25, center.z);
+        this._orbitUpdate();
+    },
+    setCameraTop() {
+        const center = this._shipCenter || new THREE.Vector3(0, 0, 0);
+        const bounds = this._shipBounds;
+        const spanX = bounds  Math.max(40, bounds.maxX - bounds.minX) : 120;
+        this._spherical.theta = 0;
+        this._spherical.phi = 0.01;
+        this._spherical.radius = Math.max(90, Math.min(240, spanX * 1.05));
+        this._orbitTarget.copy(center);
+        this._orbitUpdate();
+    },
+
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    // RAYCASTING - pick container under mouse
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    pickContainer(mouseEvent, domContainer) {
+        const rect = domContainer.getBoundingClientRect();
+        this.mouse.x =  ((mouseEvent.clientX - rect.left)  / rect.width)  * 2 - 1;
+        this.mouse.y = -((mouseEvent.clientY - rect.top)   / rect.height) * 2 + 1;
+        this.raycaster.setFromCamera(this.mouse, this.camera);
+
+        const intersects = this.raycaster.intersectObjects(this.meshes);
+        if (!intersects.length) return null;
+
+        const hit = intersects[0];
+        const mesh = hit.object;
+        const containers = mesh.userData.containers;
+        if (!containers) return null;
+        return containers[hit.instanceId];
+    },
+
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    // TEXT SPRITE (canvas-based)
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    _makeTextSprite(text, opts = {}) {
+        const { color = '#0f172a', size = 20, bg = 'rgba(226,232,240,0.7)' } = opts;
+        const canvas = document.createElement('canvas');
+        canvas.width = 256; canvas.height = 64;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = bg;
+        ctx.roundRect(0, 0, 256, 64, 8);
+        ctx.fill();
+        ctx.fillStyle = color;
+        ctx.font = `${size}px "IBM Plex Mono", monospace`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, 128, 32);
+
+        const texture = new THREE.CanvasTexture(canvas);
+        const mat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false });
+        return new THREE.Sprite(mat);
+    },
+
+    toggleLabels() {
+        this.showLabels = !this.showLabels;
+        this.labelObjects.forEach(l => { l.visible = this.showLabels; });
+        return this.showLabels;
+    },
+
+    toggleStructure() {
+        this.showStructure = !this.showStructure;
+        this.structureMeshes.forEach(m => { m.visible = this.showStructure; });
+        return this.showStructure;
+    },
+
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    // RENDER LOOP
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    _animate() {
+        this._animFrame = requestAnimationFrame(() => this._animate());
+        this.renderer.render(this.scene, this.camera);
+    },
+
+    _onResize(dom) {
+        const W = dom.clientWidth, H = dom.clientHeight;
+        this.camera.aspect = W / H;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(W, H);
+    },
+
+    destroy() {
+        cancelAnimationFrame(this._animFrame);
+        this.scene.clear();
+        this.renderer.dispose();
+    },
+};
+
+</script>
+<script>
+/**
+ * ui.js - UI interaction: tooltips, detail panel, stats, legend, search
+ */
+
+const UI = {
+    /**
+     * Show tooltip near cursor
+     */
+    showTooltip(container, x, y) {
+        const el = document.getElementById('tooltip');
+        el.innerHTML = `
+            <div class="tt-id">${container.containerId}</div>
+            <div class="tt-row"><span class="tt-label">Type</span><span class="tt-value">${container.friendlyType} (${container.type})</span></div>
+            <div class="tt-row"><span class="tt-label">Size</span><span class="tt-value">${container.size}'</span></div>
+            <div class="tt-row"><span class="tt-label">Weight</span><span class="tt-value">${(container.weight / 1000).toFixed(1)} t</span></div>
+            <div class="tt-row"><span class="tt-label">POL</span><span class="tt-value">${container.pol}</span></div>
+            <div class="tt-row"><span class="tt-label">POD</span><span class="tt-value">${container.pod}</span></div>
+            <div class="tt-row"><span class="tt-label">Bay/Row/Tier</span><span class="tt-value">${container.bay}/${String(container.row).padStart(2,'0')}/${container.tier}</span></div>
+            ${container.bookingParty  `<div class="tt-row"><span class="tt-label">Client</span><span class="tt-value">${container.bookingParty}</span></div>` : ''}
+            ${container.isReefer && !container.isNOR  `<div class="tt-row"><span class="tt-label">Temp</span><span class="tt-value">${container.temp || container.setting}</span></div>` : ''}
+        `;
+        // Position tooltip avoiding screen edges
+        const pad = 15;
+        const maxX = window.innerWidth - 340;
+        const maxY = window.innerHeight - 250;
+        el.style.left = Math.min(x + pad, maxX) + 'px';
+        el.style.top = Math.min(y + pad, maxY) + 'px';
+        el.classList.remove('hidden');
+    },
+
+    hideTooltip() {
+        document.getElementById('tooltip').classList.add('hidden');
+    },
+
+    /**
+     * Show detail panel for selected container
+     */
+    showDetail(container) {
+        const panel = document.getElementById('detail-panel');
+        const content = document.getElementById('detail-content');
+        const title = document.getElementById('detail-title');
+
+        title.textContent = container.containerId;
+
+        // Determine badge
+        let badge = '';
+        if (container.isReefer && !container.isNOR) badge = '<span class="detail-badge badge-reefer">RFï¸ Reefer</span>';
+        else if (container.isSpecial) badge = '<span class="detail-badge badge-special">Warning Special</span>';
+        else badge = '<span class="detail-badge badge-dry">ðŸ“¦ Dry</span>';
+
+        if (container.isNOR) badge = '<span class="detail-badge badge-special">NOR - Reefer without temp</span>';
+
+        content.innerHTML = `
+            <div class="detail-section">
+                <h4>Classification</h4>
+                ${badge}
+                ${this._row('Friendly Type', container.friendlyType)}
+                ${this._row('ISO Type', container.type)}
+                ${this._row('Size', container.size + "'")}
+                ${this._row('Height', container.height || '-')}
+                ${this._row('Status', container.full || '-')}
+            </div>
+            <div class="detail-section">
+                <h4>Position</h4>
+                ${this._row('Bay', String(container.bay).padStart(2, '0'))}
+                ${this._row('Row', String(container.row).padStart(2, '0'))}
+                ${this._row('Tier', container.tier)}
+                ${this._row('Slot', container.slot)}
+                ${this._row('Location', container.isDeck  'ðŸ”º Deck' : 'ðŸ”» Hold')}
+            </div>
+            <div class="detail-section">
+                <h4>Routing</h4>
+                ${this._row('POL', container.pol)}
+                ${this._row('POD', container.pod)}
+                ${this._row('Delivery', container.delivery || '-')}
+                ${this._row('Opt Port', container.optPort || '-')}
+                ${this._row('POO', container.poo || '-')}
+                ${this._row('FPOD', container.fpod || '-')}
+            </div>
+            <div class="detail-section">
+                <h4>Cargo</h4>
+                ${this._row('Weight', (container.weight / 1000).toFixed(1) + ' t')}
+                ${this._row('Carrier', container.carrier)}
+                ${this._row('Temp / Setting', container.temp || container.setting || '-')}
+                ${this._row('IMO / Class', container.imo || container.class || '-')}
+            </div>
+            <div class="detail-section">
+                <h4>Commercial</h4>
+                ${this._row('Booking #', container.bookingNumber || '-')}
+                ${this._row('Client', container.bookingParty || '-')}
+                ${this._row('Booking POD', container.bookingPod || '-')}
+                ${this._row('Cargo Type', container.cargoType || '-')}
+                ${this._row('Vessel Origem', container.vesselOrigem || '-')}
+                ${this._row('Revenue', container.revenue  '$' + container.revenue.toLocaleString() : '-')}
+            </div>
+        `;
+
+        panel.classList.remove('hidden');
+    },
+
+    hideDetail() {
+        document.getElementById('detail-panel').classList.add('hidden');
+    },
+
+    _row(label, value) {
+        return `<div class="detail-row"><span class="dlabel">${label}</span><span class="dvalue">${value}</span></div>`;
+    },
+
+    /**
+     * Update statistics cards
+     */
+    updateStats(containers) {
+        const total = containers.length;
+        const dc20 = containers.filter(c => c.friendlyType === 'DC20').length;
+        const hc40 = containers.filter(c => c.friendlyType === 'HC40').length;
+        const rh40 = containers.filter(c => c.isReefer && !c.isNOR).length;
+        const fr40 = containers.filter(c => c.friendlyType.startsWith('FR')).length;
+        const ot40 = containers.filter(c => c.friendlyType.startsWith('OT')).length;
+        const nors = containers.filter(c => c.isNOR).length;
+        const imo = containers.filter(c => !!c.imo).length;
+        const full = containers.filter(c => c.isFull).length;
+        const empty = containers.filter(c => c.isEmpty).length;
+        const weight = containers.reduce((s, c) => s + c.weight, 0);
+        const teu = containers.reduce((s, c) => s + (c.size >= 40  2 : 1), 0);
+
+        document.querySelector('#stat-total .stat-value').textContent = total;
+        document.querySelector('#stat-dc20 .stat-value').textContent = dc20;
+        document.querySelector('#stat-hc40 .stat-value').textContent = hc40;
+        document.querySelector('#stat-rh40 .stat-value').textContent = rh40;
+        document.querySelector('#stat-fr40 .stat-value').textContent = fr40;
+        document.querySelector('#stat-ot40 .stat-value').textContent = ot40;
+        document.querySelector('#stat-nor .stat-value').textContent = nors;
+        document.querySelector('#stat-imo .stat-value').textContent = imo;
+        document.querySelector('#stat-full .stat-value').textContent = full;
+        document.querySelector('#stat-empty .stat-value').textContent = empty;
+        document.querySelector('#stat-tons .stat-value').textContent = (weight / 1000).toFixed(0);
+        document.querySelector('#stat-teus .stat-value').textContent = teu;
+    },
+
+    /**
+     * Build legend for current color mode
+     */
+    buildLegend(mode, containers) {
+        const el = document.getElementById('legend-container');
+        if (!el) return;
+        el.innerHTML = '';
+
+        let items = [];
+        const colors = CONFIG.COLORS;
+
+        switch (mode) {
+            case 'type':
+                const types = [...new Set(containers.map(c => c.friendlyType))].filter(t => t && t !== 'OTHER').sort();
+                types.forEach(t => items.push({ label: t, color: colors.type[t] || colors.type['OTHER'] }));
+                break;
+            case 'pol':
+                const pols = [...new Set(containers.map(c => c.pol))].filter(Boolean).sort();
+                pols.forEach(p => items.push({ label: p, color: colors.pol[p] || CONFIG.colorFromKey(p, 'POL') }));
+                break;
+            case 'pod':
+                const pods = [...new Set(containers.map(c => c.pod))].sort((a, b) => {
+                    let idxA = CONFIG.ROTATION.indexOf(a);
+                    let idxB = CONFIG.ROTATION.indexOf(b);
+                    if (idxA === -1) idxA = 999;
+                    if (idxB === -1) idxB = 999;
+                    return idxA - idxB || a.localeCompare(b);
+                });
+                pods.filter(Boolean).forEach(p => items.push({ label: p, color: colors.pod[p] || CONFIG.colorFromKey(p, 'POD') }));
+                break;
+            case 'client':
+                const clients = [...new Set(containers.map(c => c.bookingParty))].filter(Boolean).sort();
+                clients.slice(0, 15).forEach(c => {
+                    let hash = 0;
+                    for (let i = 0; i < c.length; i++) hash = c.charCodeAt(i) + ((hash << 5) - hash);
+                    const hue = Math.abs(hash) % 360;
+                    items.push({ label: c, color: new THREE.Color().setHSL(hue / 360, 0.65, 0.55).getHex() });
+                });
+                break;
+            case 'fullEmpty':
+                items = [
+                    { label: 'Full', color: colors.fullEmpty['Full'] },
+                    { label: 'Empty', color: colors.fullEmpty['Empty'] },
+                ];
+                break;
+            case 'reeferDry':
+                items = [
+                    { label: 'Reefer', color: colors.reeferDry['reefer'] },
+                    { label: 'Dry', color: colors.reeferDry['dry'] },
+                    { label: 'Special', color: colors.reeferDry['special'] },
+                ];
+                break;
+            case 'specials':
+                items = [
+                    { label: 'IMO', color: colors.specials['IMO'] },
+                    { label: 'NOR', color: colors.specials['NOR'] },
+                    { label: 'FR', color: colors.specials['FR'] },
+                    { label: 'OT', color: colors.specials['OT'] },
+                    { label: 'Other', color: colors.specials['OTHER'] },
+                ];
+                break;
+            case 'weight':
+                items = [
+                    { label: 'Light', color: 0x3b82f6 },
+                    { label: 'Medium', color: 0x10b981 },
+                    { label: 'Heavy', color: 0xf59e0b },
+                    { label: 'Max', color: 0xef4444 },
+                ];
+                break;
+            case 'carrier':
+                const carriers = [...new Set(containers.map(c => c.carrier))].filter(Boolean).sort();
+                carriers.forEach(c => items.push({ label: c, color: colors.carrier[c] || colors.carrier['_default'] }));
+                break;
+        }
+
+        items.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'legend-item';
+            const hex = '#' + item.color.toString(16).padStart(6, '0');
+            div.innerHTML = `<span class="legend-swatch" style="background:${hex}"></span><span>${item.label}</span>`;
+            el.appendChild(div);
+        });
+    },
+
+    /**
+     * Build interactive Bay Navigator
+     */
+    buildBayNavigator(bays, onSelect) {
+        const container = document.getElementById('bay-navigator');
+        if (!container) return;
+        container.innerHTML = '';
+        
+        // "All" button
+        const btnAll = document.createElement('button');
+        btnAll.className = 'bay-nav-btn active';
+        btnAll.textContent = 'ALL';
+        btnAll.onclick = () => {
+            document.querySelectorAll('.bay-nav-btn').forEach(b => b.classList.remove('active'));
+            btnAll.classList.add('active');
+            onSelect(null);
+        };
+        container.appendChild(btnAll);
+
+        bays.forEach(bay => {
+            const btn = document.createElement('button');
+            btn.className = 'bay-nav-btn';
+            btn.textContent = String(bay).padStart(2, '0');
+            btn.onclick = () => {
+                document.querySelectorAll('.bay-nav-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                onSelect(bay);
+            };
+            container.appendChild(btn);
+        });
+    },
+
+    /**
+     * Export containers to CSV
+     */
+    exportToCSV(containers) {
+        if (!containers || containers.length === 0) return;
+        
+        const headers = ['ContainerId', 'Bay', 'Row', 'Tier', 'Size', 'Type', 'POL', 'POD', 'Weight', 'Full/Empty', 'BookingNumber', 'Client'];
+        const rows = containers.map(c => [
+            c.containerId, c.bay, c.row, c.tier, c.size, c.type, c.pol, c.pod, c.weight, c.full, c.bookingNumber, c.bookingParty
+        ]);
+        
+        let csvContent = "data:text/csv;charset=utf-8," 
+            + headers.join(",") + "\n"
+            + rows.map(e => e.join(",")).join("\n");
+            
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `Vessel_View_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    },
+
+    /**
+     * Search containers by ID, booking, or client
+     */
+    search(query, containers) {
+        if (!query) return [];
+        const q = query.toUpperCase().trim();
+        return containers.filter(c =>
+            c.containerId.toUpperCase().includes(q) ||
+            (c.bookingNumber && c.bookingNumber.toUpperCase().includes(q)) ||
+            (c.bookingParty && c.bookingParty.toUpperCase().includes(q))
+        );
+    },
+
+    showSearchResults(results, onSelect) {
+        const dd = document.getElementById('search-results');
+        if (!dd) return;
+        if (!results.length) { dd.classList.add('hidden'); return; }
+
+        dd.innerHTML = '';
+        results.forEach(c => {
+            const div = document.createElement('div');
+            div.className = 'search-item';
+            div.innerHTML = `
+                <span class="si-id">${c.containerId}</span>
+                <span class="si-info">${c.friendlyType} - ${c.pol}->${c.pod}${c.bookingParty  ' - ' + c.bookingParty : ''}</span>
+            `;
+            div.onclick = () => {
+                document.getElementById('search-input').value = c.containerId;
+                dd.classList.add('hidden');
+                onSelect(c);
+            };
+            dd.appendChild(div);
+        });
+        dd.classList.remove('hidden');
+    },
+
+    renderOps(analysis) {
+        const summary = document.getElementById('ops-summary');
+        const critical = document.getElementById('ops-critical');
+        const ports = document.getElementById('ops-ports');
+        if (!summary || !critical || !ports || !analysis) return;
+
+        summary.innerHTML = [
+            ['MODE', analysis.mode],
+            ['STATUS', analysis.status],
+            ['TEU REAL', analysis.teu],
+            ['UTILIZATION', `${analysis.utilization}%`],
+            ['MISSING', analysis.missing.length],
+            ['EXTRA', analysis.extra.length],
+            ['POD DIV', analysis.podMismatch.length],
+            ['NOR', analysis.totalNOR],
+            ['SPECIAL', analysis.criticalCargo.length],
+        ].map(([label, value]) => `
+            <div class="ops-tile">
+                <div class="ops-value">${value}</div>
+                <div class="ops-label">${label}</div>
+            </div>
+        `).join('');
+
+        const issues = analysis.issues.slice(0, 30);
+        critical.innerHTML = issues.length  issues.map(i => `
+            <div class="ops-item ${i.level}">
+                <div class="ops-item-title">${i.type}: ${i.title}</div>
+                <div class="ops-item-sub">${i.detail}</div>
+            </div>
+        `).join('') : `
+            <div class="ops-item ok">
+                <div class="ops-item-title">No critical divergence</div>
+                <div class="ops-item-sub">Booking and BAPLIE are aligned for the loaded data.</div>
+            </div>
+        `;
+
+        ports.innerHTML = analysis.bottlenecks.map(p => {
+            const types = Object.entries(p.typeCount)
+                .map(([type, qty]) => `${qty} ${type}`)
+                .join(' | ');
+            
+            const portName = p.pod && p.pod !== 'UNKNOWN'  p.pod : 'NOT DEFINED / T/S';
+            const idsList = p.containerIds.length > 0  `<div class="ops-item-ids">IDs: ${p.containerIds.join(', ')}</div>` : '';
+
+            return `
+                <div class="ops-item ${p.missing || p.extra  'warning' : 'ok'}">
+                    <div class="ops-item-title">${portName} - ${p.total} CTR (${types}) / ${p.teu} TEU</div>
+                    <div class="ops-item-sub">
+                        Missing ${p.missing} | Extra ${p.extra} | Reefer ${p.reefer} | NOR ${p.nor} | IMO ${p.imo} | OT ${p.ot} | FR ${p.fr}
+                    </div>
+                    ${idsList}
+                </div>
+            `;
+        }).join('');
+    },
+
+    setVesselInfo(vessel, voyage, port, mode) {
+        const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v || '-'; };
+        set('vi-vessel', vessel);
+        set('vi-voyage', voyage);
+        set('vi-port',   port);
+        set('vi-mode',   mode || 'DISCHARGE');
+    },
+
+    showLoading(text) {
+        const ol = document.getElementById('loading-overlay');
+        if (!ol) return;
+        ol.querySelector('.loading-text').textContent = text || 'Loading...';
+        ol.style.display = 'flex';
+    },
+
+    hideLoading() {
+        const ol = document.getElementById('loading-overlay');
+        if (ol) ol.style.display = 'none';
+    },
+};
+
+</script>
+<script>
+/**
+ * filters.js - Build filter dropdowns and apply filter logic
+ */
+
+const FILTERS = {
+
+    // Populate all filter dropdowns from container data
+    buildDropdowns(containers) {
+        const types    = [...new Set(containers.map(c => c.friendlyType))].sort();
+        const pols     = [...new Set(containers.map(c => c.pol))].filter(Boolean).sort();
+        const pods     = [...new Set(containers.map(c => c.pod))].filter(Boolean).sort();
+        const clients  = [...new Set(containers.map(c => c.bookingParty))].filter(Boolean).sort();
+        const carriers = [...new Set(containers.map(c => c.carrier))].filter(Boolean).sort();
+
+        this._fill('filter-type',    types,    'All Types');
+        this._fill('filter-pol',     pols,     'All POL');
+        this._fill('filter-pod',     pods,     'All POD');
+        this._fill('filter-client',  clients,  'All Clients');
+        this._fill('filter-carrier', carriers, 'All Carriers');
+    },
+
+    _fill(id, values, placeholder) {
+        const sel = document.getElementById(id);
+        if (!sel) return;
+        sel.innerHTML = `<option value="">${placeholder}</option>`;
+        values.forEach(v => {
+            const opt = document.createElement('option');
+            opt.value = v; opt.textContent = v;
+            sel.appendChild(opt);
+        });
+    },
+
+    // Read current filter state
+    getState() {
+        return {
+            type:    document.getElementById('filter-type').value    || '',
+            pol:     document.getElementById('filter-pol').value     || '',
+            pod:     document.getElementById('filter-pod').value     || '',
+            client:  document.getElementById('filter-client').value  || '',
+            carrier: document.getElementById('filter-carrier').value || '',
+            specialType: document.getElementById('filter-special-type').value || '',
+            reefer:  document.getElementById('filter-reefer').checked || false,
+            full:    document.getElementById('filter-full').checked   || false,
+            empty:   document.getElementById('filter-empty').checked  || false,
+            bay:     null, // set by bay navigator
+        };
+    },
+
+    // Apply filters to full container list -> returns visible containers
+    apply(containers, state) {
+        return containers.filter(c => {
+            if (state.type    && c.friendlyType !== state.type)    return false;
+            if (state.pol     && c.pol          !== state.pol)     return false;
+            if (state.pod     && c.pod          !== state.pod)     return false;
+            if (state.client  && c.bookingParty !== state.client)  return false;
+            if (state.carrier && c.carrier      !== state.carrier) return false;
+            if (state.reefer  && (!c.isReefer || c.isNOR))  return false;
+            if (state.specialType && CONFIG.getSpecialCategory(c) !== state.specialType) return false;
+            if (state.full    && !c.isFull)     return false;
+            if (state.empty   && !c.isEmpty)    return false;
+            if (state.bay     && c.bay          !== state.bay)     return false;
+            return true;
+        });
+    },
+
+    // Reset all filter controls
+    reset() {
+        ['filter-type','filter-pol','filter-pod','filter-client','filter-carrier','filter-special-type'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
+        });
+        ['filter-reefer','filter-full','filter-empty'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.checked = false;
+        });
+    },
+};
+
+</script>
+<script>
+/**
+ * app.js - Main orchestrator
+ * Controls upload flow, data pipeline, and wires all components together.
+ */
+
+const APP = {
+    allContainers: [],
+    visibleContainers: [],
+    colorMode: 'type',
+    filterBay: null,
+    sceneReady: false,
+    operationMode: 'DISCHARGE',
+    analysis: null,
+    _hoverContainer: null,
+    _selectedContainer: null,
+
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    init() {
+        this._bindUpload();
+    },
+
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    // UPLOAD SCREEN
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    _bindUpload() {
+        const baplieInput  = document.getElementById('file-baplie');
+        const moviesInput  = document.getElementById('file-movies');
+        const ediInput     = document.getElementById('file-edi');
+        const launchBtn    = document.getElementById('btn-launch');
+
+        let baplieBuffer = null;
+        let moviesBuffer = null;
+        let ediText      = null;
+
+        const checkReady = () => {
+            const mode = document.querySelector('input[name="operation-mode"]:checked').value || this.operationMode || 'DISCHARGE';
+            launchBtn.disabled = !(baplieBuffer && moviesBuffer && (mode !== 'DISCHARGE' || ediText));
+        };
+
+        const applyModeCopy = () => {
+            const mode = document.querySelector('input[name="operation-mode"]:checked').value || this.operationMode || 'DISCHARGE';
+            this.operationMode = mode;
+            const discharge = mode === 'DISCHARGE';
+            document.getElementById('label-baplie-title').textContent = discharge  'BAPLIE ARRIVAL / Bay Plan' : 'BAPLIE LOAD / Bay Plan';
+            document.getElementById('label-booking-title').textContent = discharge  'Discharge Booking' : 'Commercial Data';
+            document.getElementById('label-edi-title').textContent = discharge  'EDI BAPLIE ARRIVAL' : 'EDI BAPLIE LOAD';
+            document.getElementById('label-edi-sub').textContent = discharge  'Required for DISCHARGE. LOC+147, EQD, MEA, TDT, TMP.' : 'Optional for LOAD. Priority source when supplied.';
+            document.getElementById('edi-required-tag').textContent = discharge  'required' : 'optional';
+            document.getElementById('upload-requirements').textContent = discharge
+                 'DISCHARGE requires BAPLIE Arrival Excel + Discharge Booking + EDI Arrival.'
+                : 'LOAD requires BAPLIE Load Excel + Commercial Data. EDI is optional and overrides conflicts.';
+            checkReady();
+        };
+
+        document.querySelectorAll('input[name="operation-mode"]').forEach(r => {
+            r.addEventListener('change', applyModeCopy);
+        });
+        applyModeCopy();
+
+        baplieInput.addEventListener('change', async e => {
+            const file = e.target.files[0];
+            if (!file) return;
+            baplieBuffer = await file.arrayBuffer();
+            document.getElementById('status-baplie').textContent = ` ${file.name}`;
+            document.getElementById('status-baplie').className = 'upload-status ok';
+            document.getElementById('card-baplie').classList.add('loaded');
+            checkReady();
+        });
+
+        moviesInput.addEventListener('change', async e => {
+            const file = e.target.files[0];
+            if (!file) return;
+            moviesBuffer = await file.arrayBuffer();
+            document.getElementById('status-movies').textContent = ` ${file.name}`;
+            document.getElementById('status-movies').className = 'upload-status ok';
+            document.getElementById('card-movies').classList.add('loaded');
+            checkReady();
+        });
+
+        ediInput.addEventListener('change', async e => {
+            const file = e.target.files[0];
+            if (!file) return;
+            ediText = await file.text();
+            document.getElementById('status-edi').textContent = ` ${file.name}`;
+            document.getElementById('status-edi').className = 'upload-status ok';
+            document.getElementById('card-edi').classList.add('loaded');
+            checkReady();
+        });
+
+        launchBtn.addEventListener('click', () => {
+            const mode = document.querySelector('input[name="operation-mode"]:checked').value || this.operationMode || 'DISCHARGE';
+            this._launch(mode, baplieBuffer, moviesBuffer, ediText);
+        });
+
+        document.getElementById('btn-back').addEventListener('click', () => {
+            location.reload();
+        });
+    },
+
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    // LAUNCH
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    async _launch(mode, baplieBuffer, moviesBuffer, ediText) {
+        // Show app, hide upload
+        document.getElementById('upload-screen').style.display = 'none';
+        document.getElementById('app').classList.remove('hidden');
+        UI.showLoading('Parsing data...');
+
+        try {
+            this.operationMode = mode || 'DISCHARGE';
+
+            // 1. Parse BAPLIE
+            let containers = PARSER.parseBaplieExcel(baplieBuffer, this.operationMode);
+            let ediContainers = [];
+
+            // 2. BAPLIE Excel remains the counting base; EDI enriches operational fields.
+            if (ediText) {
+                ediContainers = PARSER.parseEdi(ediText, this.operationMode);
+                const ediMap = {};
+                ediContainers.forEach(c => { ediMap[OPS.normalizeId(c.containerId)] = c; });
+                containers.forEach(c => {
+                    if (ediMap[OPS.normalizeId(c.containerId)]) {
+                        const e = ediMap[OPS.normalizeId(c.containerId)];
+                        c.bay  = c.bay || e.bay;
+                        c.row  = c.row || e.row;
+                        c.tier = c.tier || e.tier;
+                        c.pod = c.pod || e.pod;
+                        c.pol = c.pol || e.pol;
+                        c.weight = c.weight || e.weight;
+                        c.temp = e.temp || c.temp;
+                        c.setting = e.setting || c.setting;
+                        c.isDeck = c.bay  c.isDeck : e.isDeck;
+                    }
+                });
+            }
+
+            // 3. Join commercial/booking data
+            let bookingRows = [];
+            if (moviesBuffer) {
+                const bookingData = PARSER.parseBookingExcel(moviesBuffer);
+                bookingRows = bookingData.rows;
+                PARSER.joinCommercial(containers, bookingData.map);
+            }
+
+            PARSER.normalizeOperationalFlags(containers, this.operationMode);
+
+            // Keep all containers for stats/logic
+            this.allContainers = containers;
+            this.analysis = OPS.analyze(this.operationMode, containers, bookingRows, ediContainers);
+
+            // 4. Build 3D layout (only for containers with valid positions)
+            const renderableContainers = containers.filter(c => c.bay > 0);
+            if (!containers.length) throw new Error('No containers found. Check if the selected BAPLIE/Arrival file has a Container Id column.');
+            if (!renderableContainers.length) throw new Error('Containers were found, but no valid Bay/Slot positions were detected.');
+            
+            UI.showLoading('Calculating 3D layout...');
+            await this._sleep(10);
+            const layoutData = MAPPER.buildLayout(renderableContainers);
+
+            // 5. Init Three.js scene
+            UI.showLoading('Rendering vessel...');
+            await this._sleep(10);
+            const domContainer = document.getElementById('renderer-container');
+            SCENE.init(domContainer);
+            SCENE.buildStructure(renderableContainers, layoutData);
+            SCENE.resetCamera();
+            SCENE.buildContainers(renderableContainers, this.colorMode);
+
+            this.sceneReady = true;
+
+            // 6. Build UI
+            UI.updateStats(containers);
+            UI.renderOps(this.analysis);
+            UI.buildLegend(this.colorMode, containers);
+            FILTERS.buildDropdowns(containers);
+
+            const uniqueBays = [...new Set(containers.map(c => c.bay))].sort((a,b) => a-b);
+            UI.buildBayNavigator(uniqueBays, bay => {
+                this.filterBay = bay;
+                this._applyFilters();
+                if (bay !== null) SCENE.focusBay(bay, containers);
+                else SCENE.resetCamera();
+            });
+
+            const vesselInfo = PARSER.extractVesselInfo(containers, ediText, this.operationMode);
+            UI.setVesselInfo(vesselInfo.vessel, vesselInfo.voyage, vesselInfo.port, this.operationMode);
+
+            this.visibleContainers = [...containers];
+            UI.hideLoading();
+
+            // 7. Wire events
+            this._bindAppEvents(domContainer);
+
+        } catch (err) {
+            UI.hideLoading();
+            alert('Error loading data: ' + err.message);
+            console.error(err);
+        }
+    },
+
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    // FILTER APPLICATION
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    _applyFilters() {
+        const state = FILTERS.getState();
+        state.bay = this.filterBay;
+        this.visibleContainers = FILTERS.apply(this.allContainers, state);
+        SCENE.buildContainers(this.visibleContainers.filter(c => c.bay > 0), this.colorMode);
+        UI.updateStats(this.visibleContainers);
+        UI.buildLegend(this.colorMode, this.visibleContainers);
+    },
+
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    // EVENT BINDINGS
+    // ”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€”€
+    _bindAppEvents(domContainer) {
+
+        // - Color mode buttons -
+        document.querySelectorAll('.cm-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.cm-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.colorMode = btn.dataset.mode;
+                SCENE.buildContainers(this.visibleContainers.filter(c => c.bay > 0), this.colorMode);
+                UI.buildLegend(this.colorMode, this.visibleContainers);
+            });
+        });
+
+        // - Filters -
+        ['filter-type','filter-pol','filter-pod','filter-client','filter-carrier','filter-special-type'].forEach(id => {
+            document.getElementById(id).addEventListener('change', () => this._applyFilters());
+        });
+        ['filter-reefer','filter-full','filter-empty'].forEach(id => {
+            document.getElementById(id).addEventListener('change', () => this._applyFilters());
+        });
+        document.getElementById('btn-clear-filters').addEventListener('click', () => {
+            FILTERS.reset();
+            this.filterBay = null;
+            document.querySelectorAll('.bay-nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.bay-nav-btn').classList.add('active'); // ALL button
+            this._applyFilters();
+        });
+
+        // - Camera controls -
+        document.getElementById('btn-reset-cam').addEventListener('click', () => SCENE.resetCamera());
+        document.getElementById('btn-cam-front').addEventListener('click', () => SCENE.setCameraFront());
+        document.getElementById('btn-cam-side').addEventListener('click',  () => SCENE.setCameraSide());
+        document.getElementById('btn-cam-top').addEventListener('click',   () => SCENE.setCameraTop());
+
+        // - Labels & Structure -
+        document.getElementById('btn-labels').addEventListener('click', e => {
+            const on = SCENE.toggleLabels();
+            e.target.classList.toggle('active', on);
+        });
+        document.getElementById('btn-structure').addEventListener('click', e => {
+            const on = SCENE.toggleStructure();
+            e.target.classList.toggle('active', !on); // active when HIDDEN
+        });
+
+        // - Export -
+        document.getElementById('btn-export').addEventListener('click', () => {
+            UI.exportToCSV(this.visibleContainers);
+        });
+
+        // - Close detail -
+        document.getElementById('btn-close-detail').addEventListener('click', () => {
+            UI.hideDetail();
+            this._selectedContainer = null;
+        });
+
+        // - Search -
+        const searchInput = document.getElementById('search-input');
+        searchInput.addEventListener('input', () => {
+            const results = UI.search(searchInput.value, this.allContainers);
+            UI.showSearchResults(results, container => {
+                this._selectContainer(container);
+            });
+        });
+        searchInput.addEventListener('blur', () => {
+            setTimeout(() => document.getElementById('search-results').classList.add('hidden'), 200);
+        });
+
+        // - Mouse interaction on canvas -
+        domContainer.addEventListener('mousemove', e => {
+            const c = SCENE.pickContainer(e, domContainer);
+            if (c) {
+                UI.showTooltip(c, e.clientX, e.clientY);
+                this._hoverContainer = c;
+                domContainer.style.cursor = 'pointer';
+            } else {
+                UI.hideTooltip();
+                this._hoverContainer = null;
+                domContainer.style.cursor = 'default';
+            }
+        });
+
+        domContainer.addEventListener('click', e => {
+            const c = SCENE.pickContainer(e, domContainer);
+            if (c) {
+                this._selectContainer(c);
+            }
+        });
+
+        // Escape to close detail
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                UI.hideDetail();
+                this._selectedContainer = null;
+            }
+        });
+    },
+
+    _selectContainer(container) {
+        this._selectedContainer = container;
+        UI.showDetail(container);
+        SCENE.focusContainer(container);
+        SCENE.highlight(container, this.colorMode, this.allContainers);
+    },
+
+    _sleep(ms) { return new Promise(r => setTimeout(r, ms)); },
+};
+
+// Boot
+document.addEventListener('DOMContentLoaded', () => APP.init());
+
+</script>
+
+</body>
+</html>
+
+
+
+
+
+

@@ -1,0 +1,961 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portfolio Lead - Maritime Operations Intelligence</title>
+  <meta name="description" content="Portfolio of operational intelligence systems built for maritime container shipping - capacity planning, S&OP, booking control and BI automation.">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:      #f0ede7;
+      --paper:   #ffffff;
+      --ink:     #18252a;
+      --ink2:    #3d5055;
+      --teal:    #1D4E89;
+      --teal2:   #2F6690;
+      --teallt:  #E8EEF5;
+      --gold:    #7a5a10;
+      --gold2:   #C59A2F;
+      --goldbg:  #fdf7ea;
+      --line:    #d2dcdc;
+      --gray:    #667085;
+      --red:     #a82e1e;
+      --green:   #2563A6;
+      --blue:    #1a4a8a;
+      --purple:  #5a2d82;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* section */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(240,237,231,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      padding: 0 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 52px;
+    }
+
+    .nav-brand {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--teal);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gray);
+      text-decoration: none;
+      transition: color .15s;
+    }
+    .nav-links a:hover { color: var(--teal); }
+
+    /* section */
+    .hero {
+      background: var(--teal);
+      padding: 80px 48px 72px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* subtle grid texture */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 52px 52px;
+      pointer-events: none;
+    }
+
+    /* diagonal accent shape */
+    .hero-shape {
+      position: absolute;
+      right: -80px;
+      top: -80px;
+      width: 520px;
+      height: 520px;
+      border: 1px solid rgba(185,147,47,.18);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-shape::after {
+      content: '';
+      position: absolute;
+      inset: 40px;
+      border: 1px solid rgba(185,147,47,.1);
+      border-radius: 50%;
+    }
+
+    /* gold bottom rule */
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--gold2), #D9B84F 50%, transparent);
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 48px;
+      align-items: end;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.45);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 28px; height: 1px;
+      background: var(--gold2);
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: clamp(42px, 5.5vw, 74px);
+      line-height: 1.04;
+      letter-spacing: -.5px;
+      color: #fff;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--gold2);
+      font-weight: 400;
+    }
+
+    .hero-lead {
+      margin-top: 20px;
+      max-width: 600px;
+      color: rgba(255,255,255,.55);
+      font-size: 16px;
+      line-height: 1.75;
+      font-weight: 300;
+    }
+
+    /* contact card */
+    .contact-card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(185,147,47,.25);
+      border-radius: 8px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .contact-card-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.35);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      padding-bottom: 10px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: rgba(255,255,255,.75);
+      text-decoration: none;
+      transition: color .15s;
+    }
+    .contact-item:hover { color: var(--gold2); }
+
+    .contact-icon {
+      width: 28px; height: 28px;
+      background: rgba(185,147,47,.15);
+      border: 1px solid rgba(185,147,47,.25);
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .contact-badge {
+      margin-top: 4px;
+      display: inline-block;
+      background: rgba(185,147,47,.2);
+      border: 1px solid rgba(185,147,47,.35);
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--gold2);
+      letter-spacing: 1px;
+    }
+
+    /* section */
+    .stat-bar {
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0,1fr));
+      box-shadow: 0 4px 20px rgba(1,77,78,.08);
+    }
+
+    .stat-cell {
+      padding: 24px 26px;
+      border-right: 1px solid var(--line);
+      position: relative;
+      transition: background .2s;
+    }
+    .stat-cell:last-child { border-right: none; }
+    .stat-cell:hover { background: var(--teallt); }
+
+    .stat-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 38px;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--teal);
+    }
+    .stat-unit {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--gold2);
+      margin-left: 2px;
+    }
+    .stat-desc {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--gray);
+      line-height: 1.45;
+    }
+
+    /* section */
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    /* section */
+    .about {
+      padding: 60px 0 48px;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .about-box {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--gold2);
+      border-radius: 0 8px 8px 0;
+      padding: 28px 32px;
+      box-shadow: 0 2px 16px rgba(1,77,78,.06);
+    }
+
+    .about-box h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--teal);
+      margin-bottom: 14px;
+      line-height: 1.2;
+    }
+
+    .about-box p {
+      font-size: 14px;
+      color: var(--ink2);
+      line-height: 1.8;
+      margin-bottom: 12px;
+    }
+    .about-box p:last-child { margin-bottom: 0; }
+
+    .stack-box {
+      background: var(--teal);
+      border-radius: 8px;
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .stack-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.4);
+    }
+
+    .stack-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .stag {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      padding: 5px 11px;
+      border-radius: 2px;
+      letter-spacing: .3px;
+    }
+    .stag-primary {
+      background: rgba(185,147,47,.18);
+      border: 1px solid rgba(185,147,47,.3);
+      color: var(--gold2);
+    }
+    .stag-secondary {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      color: rgba(255,255,255,.65);
+    }
+
+    .pipeline {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .pipe-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: rgba(255,255,255,.75);
+    }
+
+    .pipe-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--gold2);
+      background: rgba(185,147,47,.15);
+      border: 1px solid rgba(185,147,47,.28);
+      border-radius: 50%;
+      width: 22px; height: 22px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* section */
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--teal2);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, var(--line), transparent);
+    }
+
+    /* section */
+    .projects { padding-bottom: 72px; }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 16px;
+    }
+
+    /* featured card - spans 2 cols */
+    .p-card-featured {
+      grid-column: span 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .p-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 14px rgba(1,77,78,.06);
+      transition: box-shadow .25s, transform .25s;
+      animation: fadeUp .5s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .p-card:nth-child(1) { animation-delay: .05s; }
+    .p-card:nth-child(2) { animation-delay: .10s; }
+    .p-card:nth-child(3) { animation-delay: .15s; }
+    .p-card:nth-child(4) { animation-delay: .20s; }
+    .p-card:nth-child(5) { animation-delay: .25s; }
+    .p-card:nth-child(6) { animation-delay: .30s; }
+    .p-card:nth-child(7) { animation-delay: .35s; }
+    .p-card:nth-child(8) { animation-delay: .40s; }
+    .p-card:nth-child(9) { animation-delay: .45s; }
+
+    .p-card:hover {
+      box-shadow: 0 10px 36px rgba(1,77,78,.14);
+      transform: translateY(-3px);
+    }
+
+    .p-card[data-color="teal"]   { border-top: 3px solid var(--teal2); }
+    .p-card[data-color="gold"]   { border-top: 3px solid var(--gold2); }
+    .p-card[data-color="green"]  { border-top: 3px solid #2563A6; }
+    .p-card[data-color="red"]    { border-top: 3px solid var(--red); }
+    .p-card[data-color="blue"]   { border-top: 3px solid var(--blue); }
+    .p-card[data-color="purple"] { border-top: 3px solid var(--purple); }
+
+    .p-card-body {
+      padding: 22px 22px 14px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .p-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .p-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    .p-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--gold2);
+      opacity: .6;
+      flex-shrink: 0;
+    }
+
+    .p-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 21px;
+      font-weight: 700;
+      color: var(--teal);
+      line-height: 1.2;
+    }
+
+    .p-desc {
+      font-size: 13px;
+      color: var(--ink2);
+      line-height: 1.68;
+      flex: 1;
+    }
+
+    .p-metric {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--gold);
+      background: var(--goldbg);
+      border: 1px solid rgba(185,147,47,.2);
+      border-radius: 3px;
+      padding: 5px 11px;
+    }
+    .p-metric::before {
+      content: '';
+      color: var(--gold2);
+      font-size: 9px;
+    }
+
+    .p-links {
+      padding: 12px 22px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-top: 1px solid var(--line);
+      background: #fafafa;
+    }
+
+    .btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .5px;
+      text-decoration: none;
+      padding: 7px 15px;
+      border-radius: 4px;
+      transition: opacity .15s, transform .15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn:hover { opacity: .85; transform: translateY(-1px); }
+    .btn-primary   { background: var(--teal);  color: #fff; }
+    .btn-secondary { background: #2d4048;      color: #fff; }
+    .btn-gold      { background: var(--gold2); color: #fff; }
+    .btn-red       { background: var(--red);   color: #fff; }
+    .btn-blue      { background: var(--blue);  color: #fff; }
+
+    /* section */
+    footer {
+      background: var(--teal);
+      border-top: 4px solid var(--gold2);
+      padding: 32px 48px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .footer-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+    }
+    .footer-role {
+      font-size: 12px;
+      color: rgba(255,255,255,.45);
+      margin-top: 4px;
+      font-weight: 300;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .footer-link {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: rgba(255,255,255,.55);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color .15s;
+    }
+    .footer-link:hover { color: var(--gold2); }
+    .footer-link-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--gold2);
+      flex-shrink: 0;
+    }
+
+    .footer-note {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: rgba(255,255,255,.25);
+      line-height: 1.7;
+      letter-spacing: .3px;
+    }
+
+    /* section */
+    @media (max-width: 1080px) {
+      .project-grid { grid-template-columns: repeat(2,1fr); }
+      .p-card-featured { grid-column: span 2; }
+    }
+    @media (max-width: 760px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 52px 20px 60px; }
+      .hero-inner { grid-template-columns: 1fr; }
+      .contact-card { display: none; }
+      .wrap { padding: 0 20px; }
+      .stat-bar { grid-template-columns: repeat(2,1fr); }
+      .about { grid-template-columns: 1fr; }
+      .project-grid { grid-template-columns: 1fr; }
+      .p-card-featured { grid-column: span 1; grid-template-columns: 1fr; }
+      footer { padding: 28px 20px; }
+      .footer-inner { grid-template-columns: 1fr; gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- section -->
+  <div class="nav-brand" style="display:flex; align-items:center; gap:10px;">
+    <div style="background:#174A7C; border:2px solid #C59A2F; border-radius:8px; padding:3px 6px; display:inline-flex; align-items:center; justify-content:center;">
+      <img src="assets/grow_serve_logo.png" alt="GROW &amp; SERVE" style="height: 32px; width:auto; display:block;">
+    </div>
+    Portfolio Lead - Maritime Intelligence
+  </div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="https://datascienceportfol.io/" target="_blank">Portfolio</a></li>
+    <li><a href="https://github.com/Fabricionettto-commits" target="_blank">GitHub</a></li>
+  </ul>
+</nav>
+
+<!-- section -->
+<header class="hero">
+  <div class="hero-shape"></div>
+  <div class="hero-inner">
+    <div>
+      <p class="hero-eyebrow">Maritime Operations - S&OP - Capacity Planning - BI</p>
+      <h1>Logistics Transformed<br>Into <em>Decision Intelligence</em></h1>
+      <p class="hero-lead">
+        15+ years in maritime container operations - building the analytical layer
+        between raw system data and the decisions that actually move cargo.
+        Every tool here was built from a real operational problem, not a project brief.
+      </p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-card-title">Contact &amp; Links</div>
+      <a class="contact-item" href="mailto:Fabricionettto@gmail.com">
+        <span class="contact-icon">Email</span>
+        Fabricionettto@gmail.com
+      </a>
+      <a class="contact-item" href="https://datascienceportfol.io/" target="_blank">
+        <span class="contact-icon">Web</span>
+        datascienceportfol.io
+      </a>
+      <a class="contact-item" href="https://github.com/Fabricionettto-commits" target="_blank">
+        <span class="contact-icon">Git</span>
+        github.com/Fabricionettto-commits
+      </a>
+      <div>
+        <span class="contact-badge">Portfolio Links</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- section -->
+<div class="stat-bar">
+  <div class="stat-cell">
+    <div><span class="stat-val">15</span><span class="stat-unit">+yrs</span></div>
+    <div class="stat-desc">maritime container operations - global carriers & logistics providers</div>
+  </div>
+  <div class="stat-cell">
+    <div><span class="stat-val">9</span></div>
+    <div class="stat-desc">production tools - from booking control to Telegram distribution</div>
+  </div>
+  <div class="stat-cell">
+    <div><span class="stat-val">20</span><span class="stat-unit">min</span></div>
+    <div class="stat-desc">full vessel analysis from system export to decision - previously 2 to 4 hours</div>
+  </div>
+  <div class="stat-cell">
+    <div><span class="stat-val">950</span></div>
+    <div class="stat-desc">moves analyzed per vessel cycle - TEUs, tons, plugs, type mix, port breakdown</div>
+  </div>
+  <div class="stat-cell">
+    <div><span class="stat-val">6</span><span class="stat-unit">depts</span></div>
+    <div class="stat-desc">commercial, planning, operations, customer service, logistics, overseas offices</div>
+  </div>
+</div>
+
+<!-- section -->
+<div class="wrap">
+  <div class="about" id="about">
+    <div class="about-box">
+      <h2>Built by operations,<br>for operations</h2>
+      <p>
+        Every system shown here started with the same frustration: too many files, too many manual steps,
+        and a decision window that was closing before the numbers were even ready. I built these tools
+        to solve that - not as side projects, but as daily operational necessity.
+      </p>
+      <p>
+        The stack is Python for processing, HTML for delivery and SQL for the data layer. The approach
+        is always the same: take what the system exports, remove the manual steps in between, and deliver
+        something that any team member can read and act on before the deadline hits.
+      </p>
+      <p>
+        The result is a connected intelligence layer across booking control, capacity planning,
+        gate-in monitoring, stowage inspection and governance -
+        all running from the same operational data.
+      </p>
+    </div>
+    <div class="stack-box">
+      <div class="stack-label">Technical Stack</div>
+      <div class="stack-tags">
+        <span class="stag stag-primary">Python</span>
+        <span class="stag stag-primary">pandas</span>
+        <span class="stag stag-primary">SQL Server</span>
+        <span class="stag stag-primary">Power BI</span>
+        <span class="stag stag-secondary">HTML / CSS / JS</span>
+        <span class="stag stag-secondary">Three.js 3D</span>
+        <span class="stag stag-secondary">Excel automation</span>
+        <span class="stag stag-secondary">BAPLIE EDI parsing</span>
+        <span class="stag stag-secondary">Telegram Bot API</span>
+        <span class="stag stag-secondary">Windows Task Scheduler</span>
+        <span class="stag stag-secondary">Obsidian / Markdown</span>
+      </div>
+      <div class="stack-label" style="margin-top:8px">Data Pipeline</div>
+      <div class="pipeline">
+        <div class="pipe-step"><div class="pipe-num">1</div>System export - standardized operational inputs</div>
+        <div class="pipe-step"><div class="pipe-num">2</div>Python processing - bookings, moves, BAPLIE, discharge</div>
+        <div class="pipe-step"><div class="pipe-num">3</div>HTML dashboards - delivered for daily decisions</div>
+        <div class="pipe-step"><div class="pipe-num">4</div>Telegram distribution + Knowledge Hub governance</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- section -->
+  <div class="projects" id="projects">
+    <div class="section-label">Projects</div>
+    <div class="project-grid">
+
+      <!-- 01 - Booking Control Board (featured) -->
+      <div class="p-card p-card-featured" data-color="teal">
+        <div class="p-card-body">
+          <div class="p-header">
+            <div class="p-tag">Commercial - Operations - Planning</div>
+            <div class="p-num">01</div>
+          </div>
+          <div class="p-title">Booking Control Board</div>
+          <div class="p-desc">
+            Complete booking visibility by vessel - container mix by type (DC20, HC40, RH40, FR40),
+            over/under status per dimension (TEUs, tons, plugs), port breakdown, customer performance,
+            deadlines and pending cargo. Used daily by commercial, planning, customer service, operations,
+            logistics and overseas offices in External Review and International Office. The board answers the questions that
+            previously required a full morning: close the vessel or call commercial Cut cargo Change rotation
+            Is this customer consistently weak at port X - and why
+          </div>
+          <span class="p-metric">4 hrs -> 20 min - every working day - 6 departments + overseas</span>
+        </div>
+        <div class="p-links">
+          <a class="btn btn-primary" href="02_Booking_Control_Board/Booking_Board_Demo_Service.html">Open dashboard</a>
+        </div>
+      </div>
+
+      <!-- 02 - Capacity & Shortfall (featured) -->
+      <div class="p-card" data-color="gold" style="grid-row: span 1;">
+        <div class="p-card-body">
+          <div class="p-header">
+            <div class="p-tag">Planning - Management</div>
+            <div class="p-num">02</div>
+          </div>
+          <div class="p-title">Capacity &amp; Shortfall</div>
+          <div class="p-desc">
+            Compares commercial forecast against closed bookings per port and shipper type.
+            Shows shortfall before deadline, overbooking alerts and weight/plug/TEU control.
+            Prevented a costly rotation change by exposing discharge concentration risk before the decision was made.
+          </div>
+          <span class="p-metric">2h 30 -> 20 min - 950 moves per vessel</span>
+        </div>
+        <div class="p-links">
+          <a class="btn btn-primary"   href="03_Capacity_Shortfall/Mercury_Shortfall_Dashboard.html">Open Shortfall</a>
+          <a class="btn btn-secondary" href="03_Capacity_Shortfall/Mercury_Booking_Capacity.html">Booking / Capacity</a>
+          <a class="btn btn-secondary" href="03_Capacity_Shortfall/Mercury_Comparison_Dashboard.html">Comparison</a>
+        </div>
+      </div>
+
+      <!-- 03 - Gate-In -->
+      <div class="p-card" data-color="green">
+        <div class="p-card-body">
+          <div class="p-header">
+            <div class="p-tag">Daily Operations</div>
+            <div class="p-num">03</div>
+          </div>
+          <div class="p-title">Gate-In, Discharge &amp; Load</div>
+          <div class="p-desc">
+            Daily automation showing real vessel status through end of deadline.
+            Gate-in progress vs. booked, load confrontation and pre-calculated discharge.
+            Eliminated four manual steps per vessel per day - no more generate, feed, wait, check.
+          </div>
+          <span class="p-metric">Daily auto - zero manual steps</span>
+        </div>
+        <div class="p-links">
+          <a class="btn btn-primary"   href="04_Gate_Discharge_Load_Operations/Mercury_GateIn.html">Open Gate-In</a>
+          <a class="btn btn-secondary" href="04_Gate_Discharge_Load_Operations/Venus_Discharge_x_Load.html">Discharge x Load</a>
+        </div>
+      </div>
+
+      <!-- 04 - Final Moves -->
+      <div class="p-card" data-color="blue">
+        <div class="p-card-body">
+          <div class="p-header">
+            <div class="p-tag">Productivity - Cost</div>
+            <div class="p-num">04</div>
+          </div>
+          <div class="p-title">Final Moves / All Ports</div>
+          <div class="p-desc">
+            Final movement visibility by port across the full rotation - supporting productivity analysis,
+            cost discussions and operational planning with management.
+          </div>
+          <span class="p-metric">Full rotation - port-level breakdown</span>
+        </div>
+        <div class="p-links">
+          <a class="btn btn-primary"   href="05_Final_Moves_All_Ports/Mercury_Final_Moves.html">Open Final Moves</a>
+          <a class="btn btn-secondary" href="05_Final_Moves_All_Ports/Mercury_Moves_All_Ports.html">All Ports</a>
+        </div>
+      </div>
+
+      <!-- 05 - BAPLIE 3D -->
+      <div class="p-card" data-color="red">
+        <div class="p-card-body">
+          <div class="p-header">
+            <div class="p-tag">Technical Visualization</div>
+            <div class="p-num">05</div>
+          </div>
+          <div class="p-title">BAPLIE / Bayplan 3D Viewer</div>
+          <div class="p-desc">
+            Reads BAPLIE EDI and Excel load lists - renders the full stowage plan in 3D with
+            filters by bay, port, status, size and type. Replaced heavy spreadsheet navigation
+            with instant container-level inspection. Started as prototype, became daily tool.
+          </div>
+          <span class="p-metric">EDI -> 3D visual in seconds</span>
+        </div>
+        <div class="p-links">
+          <a class="btn btn-red" href="06_BAPLIE_Bayplan_3D/BAPLIE_Bayplan_Viewer_3D.html">Open 3D viewer</a>
+        </div>
+      </div>
+      <!-- 06 - Telegram -->
+      <div class="p-card" data-color="teal">
+        <div class="p-card-body">
+          <div class="p-header">
+            <div class="p-tag">Distribution - Automation</div>
+            <div class="p-num">07</div>
+          </div>
+          <div class="p-title">Telegram Bot</div>
+          <div class="p-desc">
+            Automated delivery of operational reports, vessel schedules and updates directly to teams.
+            Turns dashboards into a daily routine - no manual send, no missed updates,
+            no dependency on someone opening a file.
+          </div>
+          <span class="p-metric">Auto delivery - daily routine</span>
+        </div>
+        <div class="p-links">
+          <a class="btn btn-primary"   href="10_Telegram_Bot/TELEGRAM_BOT_PROJECT.md">Project summary</a>
+          <a class="btn btn-secondary" href="10_Telegram_Bot/bot_telegram_maritimo.py">Script</a>
+          <a class="btn btn-secondary" href="10_Telegram_Bot/Demo_Service_Schedule.html">Schedule</a>
+        </div>
+      </div>
+
+      <!-- 08 - Knowledge Hub -->
+      <div class="p-card" data-color="gold">
+        <div class="p-card-body">
+          <div class="p-header">
+            <div class="p-tag">Governance - Documentation</div>
+            <div class="p-num">08</div>
+          </div>
+          <div class="p-title">Operational Knowledge Hub</div>
+          <div class="p-desc">
+            Central repository for all scripts, dashboards, manuals, vessel rules and decision history.
+            Every file has a corresponding note with context and traceability. Built so any manager
+            can understand what exists, why it was built and how to use it.
+          </div>
+          <span class="p-metric">47 files indexed - full traceability</span>
+        </div>
+        <div class="p-links">
+          <a class="btn btn-primary"   href="01_Data_Center_Knowledge_Hub/Operational_Knowledge_Hub.md">Open Knowledge Hub</a>
+          <a class="btn btn-secondary" href="01_Data_Center_Knowledge_Hub/13_Operational_Vessels.md">Vessel structure</a>
+        </div>
+      </div>
+
+      <!-- 09 - Scripts -->
+      <div class="p-card" data-color="green">
+        <div class="p-card-body">
+          <div class="p-header">
+            <div class="p-tag">Automation - Pipeline</div>
+            <div class="p-num">09</div>
+          </div>
+          <div class="p-title">Scripts &amp; Sample Data</div>
+          <div class="p-desc">
+            The repeatable foundation - Python scripts, standardized input files and processed
+            output bases ready to be scaled into a full data pipeline. This is what makes
+            the operation reproducible and transferable to any team.
+          </div>
+          <span class="p-metric">Python - pipeline-ready - transferable</span>
+        </div>
+        <div class="p-links">
+          <span class="btn btn-primary" style="cursor: default; opacity: 0.7;">Automation scripts</span>
+        </div>
+      </div>
+
+    </div><!-- /project-grid -->
+  </div><!-- /projects -->
+</div><!-- /wrap -->
+
+<!-- section -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-name">
+        <div style="background:#174A7C; border:2px solid #C59A2F; border-radius:8px; padding:4px 8px; display:inline-flex; align-items:center; margin-bottom:10px;">
+          <img src="assets/grow_serve_logo.png" alt="GROW &amp; SERVE" style="height: 36px; width:auto; display:block;">
+        </div>
+        <br>Portfolio Lead<br>Analytics Team
+      </div>
+      <div class="footer-role">Senior Executive - Capacity &amp; Operations Intelligence<br>datascienceportfol.io</div>
+    </div>
+    <div class="footer-links">
+      <a class="footer-link" href="mailto:Fabricionettto@gmail.com">
+        <span class="footer-link-dot"></span>Fabricionettto@gmail.com
+      </a>
+      <a class="footer-link" href="https://datascienceportfol.io/" target="_blank">
+        <span class="footer-link-dot"></span>datascienceportfol.io
+      </a>
+      <a class="footer-link" href="https://github.com/Fabricionettto-commits" target="_blank">
+        <span class="footer-link-dot"></span>github.com/Fabricionettto-commits
+      </a>
+    </div>
+  </footer>
+
+</body>
+</html>
+
+
+
+
+

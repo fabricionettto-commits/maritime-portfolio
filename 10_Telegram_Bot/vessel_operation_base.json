@@ -1,0 +1,61 @@
+﻿{
+  "vessels": [
+    {
+      "key": "MERCURY",
+      "aliases": ["MERCURY", "MERCURY / VOYAGE 1", "MERCURY / VOYAGE 1", "MERCURY / VOYAGE 1"],
+      "voyage": "VOYAGE 1",
+      "rotation": ["USNYC", "USHOU", "USNFK", "USNFK"],
+      "last_port_eta": "2026-04-15",
+      "reports": {
+        "booking": "file:///C:/capacity_planner/booking_reports/Vessel/Mercury_Voyage_1/Report_vessel_alpha_2.html",
+        "upcoming": "file:///C:/capacity_planner/booking_reports/Vessel/Mercury_Voyage_1/Report_Disch_Load_Mercury.html",
+        "departed": "file:///C:/capacity_planner/booking_reports/Vessel/Mercury_Voyage_1/Report_Movies_MERCURY_VOYAGE_1_All_Ports.html",
+        "local_html": "C:/Users/Portfolio_User/Portfolio Workspace/demo service SERVICE - Database/APP/Telegram_Bot/reports/Report_Movies_MERCURY_VOYAGE_1_All_Ports.html",
+        "local_html_upcoming": "C:/Users/Portfolio_User/Portfolio Workspace/demo service SERVICE - Database/APP/Telegram_Bot/reports/Report_Disch_Load_Mercury.html",
+        "web_url": "Report_Movies_MERCURY_VOYAGE_1_All_Ports.html",
+        "web_url_upcoming": "Report_Disch_Load_Mercury.html",
+        "operational_totals_html": "C:/Users/Portfolio_User/Portfolio Workspace/demo service SERVICE - Database/APP/Report_Movies_MERCURY_VOYAGE_1_All_Ports.html",
+        "operational_totals_type": "moves_all_ports"
+      }
+    },
+    {
+      "key": "VENUS",
+      "aliases": ["VENUS", "VENUS / VOYAGE 2", "VENUS / VOYAGE 2", "VENUS / VOYAGE 2"],
+      "voyage": "VOYAGE 1",
+      "rotation": ["USNYC", "USHOU", "USNFK"],
+      "last_port_eta": "2026-04-27",
+      "reports": {
+        "booking": "file:///C:/capacity_planner/booking_reports/Vessel/Venus_Voyage_2/Report_VENUS_VOYAGE_2e.html",
+        "upcoming": "file:///C:/capacity_planner/booking_reports/Vessel/Venus_Voyage_2/Report_Disch_Load_VENUS.html",
+        "departed": "file:///C:/capacity_planner/booking_reports/Vessel/Venus_Voyage_2/Report_Disch_Load_VENUS.html",
+        "local_html": "C:/Users/Portfolio_User/Portfolio Workspace/demo service SERVICE - Database/APP/Telegram_Bot/reports/Report_Disch_Load_Venus.html",
+        "local_html_upcoming": "C:/Users/Portfolio_User/Portfolio Workspace/demo service SERVICE - Database/APP/Telegram_Bot/reports/Report_VENUS_VOYAGE_2e.html",
+        "web_url": "Report_Disch_Load_Venus.html",
+        "web_url_upcoming": "Report_VENUS_VOYAGE_2e.html",
+        "operational_totals_html": "C:/Users/Portfolio_User/Portfolio Workspace/demo service SERVICE - Database/APP/Venus_Voyage_2/Report_Disch_Load_VENUS.html",
+        "operational_totals_type": "disch_load_load_side"
+      }
+    },
+    {
+      "key": "NEPTUNE",
+      "aliases": ["NEPTUNE", "NEPTUNE", "NEPTUNE / VOYAGE 3", "NEPTUNE / VOYAGE 3", "NEPTUNE / VOYAGE 3"],
+      "voyage": "VOYAGE 1",
+      "rotation": ["USNYC", "USHOU", "USNFK", "USNFK"],
+      "last_port_eta": "2026-05-03",
+      "reports": {
+        "booking": "file:///C:/capacity_planner/booking_reports/Vessel/Neptune_Voyage_3/Report_Neptune_Voyage_3.html",
+        "upcoming": "file:///C:/capacity_planner/booking_reports/Vessel/Neptune_Voyage_3/Report_Disch_Load_Neptune_Voyage_3.html",
+        "departed": "file:///C:/capacity_planner/booking_reports/Vessel/Neptune_Voyage_3/Report_Disch_Load_Neptune_Voyage_3.html",
+        "local_html": "C:/Users/Portfolio_User/Portfolio Workspace/demo service SERVICE - Database/APP/Telegram_Bot/reports/Report_Disch_Load_Neptune_Voyage_3.html",
+        "local_html_upcoming": "C:/Users/Portfolio_User/Portfolio Workspace/demo service SERVICE - Database/APP/Telegram_Bot/reports/Report_Neptune_Voyage_3.html",
+        "web_url": "Report_Disch_Load_Neptune_Voyage_3.html",
+        "web_url_upcoming": "Report_Neptune_Voyage_3.html",
+        "operational_totals_html": "C:/Users/Portfolio_User/Portfolio Workspace/demo service SERVICE - Database/APP/Neptune_Voyage_3/Report_Disch_Load_Neptune_Voyage_3.html",
+        "operational_totals_type": "disch_load_load_side"
+      }
+    }
+  ]
+}
+
+
+
