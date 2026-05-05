@@ -12,11 +12,31 @@ This portfolio is not a catalog of dashboards. It is a public, sanitized case st
 - Supported multi-port operations across BRSSA, BRFOR, BRRIO, and BRIOA.
 - Connected booking control, capacity planning, gate-in visibility, final moves, and bayplan views into one decision flow.
 
+## Business Relevance
+
+- Each missed TEU represents lost revenue or reallocation cost.
+- Late shortfall detection leads to operational rework and commercial impact.
+- This system shifts decisions from reactive to proactive, reducing execution risk.
+
+Estimated effect: improves planning accuracy, reduces last-minute changes, and protects vessel utilization.
+
 ## Main Case
 
 **Capacity and Shortfall Intelligence**
 
-This case prevented capacity planning errors before vessel execution by identifying port-level shortfall and exposing the gap between planned demand, operational capacity, and execution status.
+This project was built to prevent revenue loss and operational rework caused by late capacity visibility.
+
+Before this:
+
+- shortfall was identified too late;
+- planning decisions were reactive;
+- commercial and operations worked with conflicting numbers.
+
+After this:
+
+- capacity risk is visible before execution;
+- planning decisions happen earlier;
+- teams operate with the same numbers.
 
 The core operational question was simple:
 
@@ -85,7 +105,7 @@ Open the reports:
 
 ## Positioning
 
-**Maritime Operations Intelligence | Capacity Planning | Shortfall Analysis | Decision Systems for Container Shipping**
+**Maritime Operations Intelligence | Capacity Planning, Shortfall Prevention & Decision Systems | Container Shipping**
 
 ## Data Disclaimer
 
