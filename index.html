@@ -1,1 +1,596 @@
-﻿<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=OPEN_HERE_GitHub.html"><title>Portfolio Demo</title></head><body><a href="OPEN_HERE_GitHub.html">Open Portfolio Demo</a></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fabricio Neto — Operations Intelligence Engineer</title>
+  <style>
+    :root {
+      --navy:   #0a1628;
+      --navy2:  #0f2040;
+      --navy3:  #162a52;
+      --teal:   #00c9b1;
+      --gold:   #f0a500;
+      --text:   #e2e8f0;
+      --muted:  #94a3b8;
+      --card:   #111f3a;
+      --border: rgba(0,201,177,0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--navy);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.6;
+    }
+
+    a { color: var(--teal); text-decoration: none; }
+    a:hover { color: var(--gold); }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(10,22,40,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px;
+    }
+    .nav-logo {
+      font-size: 1rem; font-weight: 700; letter-spacing: 0.05em;
+      color: var(--teal);
+    }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a { color: var(--muted); font-size: 0.875rem; }
+    .nav-links a:hover { color: var(--teal); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0,201,177,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-block;
+      border: 1px solid var(--teal);
+      color: var(--teal);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.3rem 1rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+    }
+    .hero h1 span { color: var(--teal); }
+    .hero-title {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.03em;
+    }
+    .hero-statement {
+      font-size: clamp(1.05rem, 2vw, 1.3rem);
+      color: var(--muted);
+      max-width: 640px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-statement strong { color: var(--text); }
+    .hero-cta {
+      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    }
+    .btn {
+      padding: 0.75rem 1.75rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-primary {
+      background: var(--teal);
+      color: var(--navy);
+      border: none;
+    }
+    .btn-primary:hover { background: #00e6cc; color: var(--navy); }
+    .btn-outline {
+      background: transparent;
+      color: var(--teal);
+      border: 1px solid var(--teal);
+    }
+    .btn-outline:hover { background: rgba(0,201,177,0.1); color: var(--teal); }
+
+    /* ── METRICS ── */
+    .metrics {
+      background: var(--navy2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 3rem 2rem;
+    }
+    .metrics-inner {
+      max-width: 900px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 2rem; text-align: center;
+    }
+    .metric-value {
+      font-size: 2.2rem; font-weight: 800; color: var(--teal);
+      line-height: 1;
+    }
+    .metric-label {
+      font-size: 0.8rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-top: 0.4rem;
+    }
+
+    /* ── SECTION DEFAULTS ── */
+    section { padding: 5rem 2rem; }
+    .section-inner { max-width: 1000px; margin: 0 auto; }
+    .section-tag {
+      font-size: 0.75rem; color: var(--teal);
+      text-transform: uppercase; letter-spacing: 0.12em;
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .section-sub {
+      color: var(--muted); max-width: 560px;
+      margin-bottom: 3rem; font-size: 0.95rem;
+    }
+
+    /* ── PROJECTS ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 1.5rem;
+    }
+    .project-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.75rem;
+      transition: border-color 0.2s, transform 0.2s;
+      display: flex; flex-direction: column;
+    }
+    .project-card:hover {
+      border-color: var(--teal);
+      transform: translateY(-3px);
+    }
+    .project-icon {
+      font-size: 1.75rem; margin-bottom: 1rem;
+    }
+    .project-tag {
+      font-size: 0.7rem; color: var(--teal);
+      text-transform: uppercase; letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+    .project-name {
+      font-size: 1.05rem; font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+    .project-desc {
+      font-size: 0.85rem; color: var(--muted);
+      flex: 1;
+    }
+    .project-metric {
+      margin-top: 1rem;
+      background: rgba(0,201,177,0.07);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem; color: var(--teal);
+    }
+    .project-links {
+      margin-top: 1.25rem;
+      display: flex; gap: 0.75rem;
+    }
+    .project-links a {
+      font-size: 0.78rem;
+      color: var(--muted);
+      border: 1px solid rgba(148,163,184,0.2);
+      padding: 0.3rem 0.65rem;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .project-links a:hover {
+      color: var(--teal);
+      border-color: var(--teal);
+    }
+
+    /* ── STACK ── */
+    .stack-section { background: var(--navy2); }
+    .stack-grid {
+      display: flex; flex-wrap: wrap; gap: 0.75rem;
+    }
+    .stack-chip {
+      background: var(--navy3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.45rem 1rem;
+      font-size: 0.82rem;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+    .stack-chip.highlight {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    @media (max-width: 640px) {
+      .about-grid { grid-template-columns: 1fr; }
+    }
+    .about-text p {
+      color: var(--muted); font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+    .about-text p strong { color: var(--text); }
+    .timeline { list-style: none; }
+    .timeline li {
+      position: relative;
+      padding: 0 0 1.5rem 1.25rem;
+      border-left: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+    .timeline li::before {
+      content: '';
+      position: absolute;
+      left: -4px; top: 5px;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--teal);
+    }
+    .timeline li:last-child { padding-bottom: 0; }
+    .timeline-year {
+      font-size: 0.7rem; color: var(--teal);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-bottom: 0.2rem;
+    }
+    .timeline-item { color: var(--text); font-weight: 600; }
+    .timeline-company { color: var(--muted); }
+
+    /* ── CONTACT ── */
+    .contact-section { background: var(--navy2); }
+    .contact-inner {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .contact-links {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      justify-content: center; margin-top: 2rem;
+    }
+    .contact-link {
+      display: flex; align-items: center; gap: 0.5rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text);
+      transition: border-color 0.2s;
+    }
+    .contact-link:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 48px; height: 3px;
+      background: var(--teal);
+      border-radius: 2px;
+      margin: 1rem 0 2rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">FN · OpsIntel</div>
+  <div class="nav-links">
+    <a href="#projects">Projects</a>
+    <a href="#stack">Stack</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Operations Intelligence Engineer</div>
+  <h1>Fabricio <span>Neto</span></h1>
+  <div class="hero-title">Maritime &amp; Supply Chain · Python · Dashboards · AI Agents</div>
+  <p class="hero-statement">
+    <strong>I don't build dashboards.</strong><br>
+    I make capacity risk visible before execution — combining 15 years of maritime operations with Python automation and operational AI systems.
+  </p>
+  <div class="hero-cta">
+    <a href="#projects" class="btn btn-primary">View Projects</a>
+    <a href="https://linkedin.com/in/fabricio-neto-pcd" target="_blank" class="btn btn-outline">LinkedIn</a>
+  </div>
+</section>
+
+<!-- METRICS -->
+<div class="metrics">
+  <div class="metrics-inner">
+    <div>
+      <div class="metric-value">4h→20min</div>
+      <div class="metric-label">Vessel planning cycle time</div>
+    </div>
+    <div>
+      <div class="metric-value">950+</div>
+      <div class="metric-label">Container moves processed / run</div>
+    </div>
+    <div>
+      <div class="metric-value">99+ TEUs</div>
+      <div class="metric-label">Shortfall risk identified before execution</div>
+    </div>
+    <div>
+      <div class="metric-value">15 yrs</div>
+      <div class="metric-label">Maritime operations experience</div>
+    </div>
+    <div>
+      <div class="metric-value">225</div>
+      <div class="metric-label">Reefer plugs managed per vessel</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-inner">
+    <div class="section-tag">Selected Work</div>
+    <h2 class="section-title">Operations Intelligence Projects</h2>
+    <div class="divider"></div>
+    <p class="section-sub">Built from real shipping operations — not sandbox exercises. Every metric is production-verified.</p>
+
+    <div class="projects-grid">
+
+      <!-- BAPLIE -->
+      <div class="project-card">
+        <div class="project-icon">🚢</div>
+        <div class="project-tag">3D Visualization · JavaScript · Three.js</div>
+        <div class="project-name">BAPLIE Bayplan Viewer</div>
+        <p class="project-desc">
+          Interactive 3D container ship viewer that renders cargo plans from BAPLIE EDI files. Slot-level visibility across the entire vessel — discharge ports, container types, reefers highlighted in real time.
+        </p>
+        <div class="project-metric">Full vessel plan visible in &lt; 3 seconds</div>
+        <div class="project-links">
+          <a href="https://github.com/fabricionettto-commits/maritime-portfolio" target="_blank">GitHub</a>
+        </div>
+      </div>
+
+      <!-- CAPACITY SHORTFALL -->
+      <div class="project-card">
+        <div class="project-icon">📊</div>
+        <div class="project-tag">Python · Pandas · HTML Dashboard</div>
+        <div class="project-name">Capacity &amp; Shortfall Intelligence</div>
+        <p class="project-desc">
+          End-to-end pipeline from raw booking Excel to HTML dashboards. Tracks TEU, weight, reefer plug and equipment shortfall per port per voyage. Replaces 4-hour manual cycle with automated 20-minute run.
+        </p>
+        <div class="project-metric">95% report time reduction · 99+ TEU risk detected</div>
+        <div class="project-links">
+          <a href="https://github.com/fabricionettto-commits/capacity-shortfall-intelligence" target="_blank">GitHub</a>
+        </div>
+      </div>
+
+      <!-- BOOKING CONTROL -->
+      <div class="project-card">
+        <div class="project-icon">📋</div>
+        <div class="project-tag">Python · HTML · Bootstrap</div>
+        <div class="project-name">Booking Control Board</div>
+        <p class="project-desc">
+          Real-time booking demand visibility across all ports in a voyage. Tracks confirmed vs. tentative vs. shortfall by commodity, equipment type and destination. Updated automatically on each report run.
+        </p>
+        <div class="project-metric">Multi-port Brazilian operations: BRSSA · BRFOR · BRRIO · BRIOA</div>
+        <div class="project-links">
+          <a href="https://github.com/fabricionettto-commits/maritime-portfolio" target="_blank">GitHub</a>
+        </div>
+      </div>
+
+      <!-- GATE-IN AUTOMATION -->
+      <div class="project-card">
+        <div class="project-icon">⚙️</div>
+        <div class="project-tag">Python · Windows Task Scheduler</div>
+        <div class="project-name">Gate-In Automation</div>
+        <p class="project-desc">
+          Automated pipeline that monitors gate-in reports, validates container moves against the booking plan, and generates execution-ready HTML summaries — removing manual data extraction from the daily routine.
+        </p>
+        <div class="project-metric">Zero manual extraction · Runs on schedule via Task Scheduler</div>
+        <div class="project-links">
+          <a href="https://github.com/fabricionettto-commits/maritime-portfolio" target="_blank">GitHub</a>
+        </div>
+      </div>
+
+      <!-- TRANSSHIPMENT DECISION -->
+      <div class="project-card">
+        <div class="project-icon">🔀</div>
+        <div class="project-tag">Python · Decision Logic · HTML</div>
+        <div class="project-name">Transshipment Decision System</div>
+        <p class="project-desc">
+          Automated storage decision engine for UYMVD (Montevideo) transshipment cargo. Evaluates loop connections, feeder/barge schedules, and dwell time to output AUTHORIZED or RETAIN AT ORIGIN decisions with full audit trail.
+        </p>
+        <div class="project-metric">4 loops analyzed · Decision generated in &lt; 1 min</div>
+        <div class="project-links">
+          <a href="https://github.com/fabricionettto-commits/maritime-decision-systems" target="_blank">GitHub</a>
+        </div>
+      </div>
+
+      <!-- CEREBRO / KNOWLEDGE HUB -->
+      <div class="project-card">
+        <div class="project-icon">🧠</div>
+        <div class="project-tag">Obsidian · Python · AI Agents</div>
+        <div class="project-name">Operational Knowledge Hub</div>
+        <p class="project-desc">
+          Centralized operational memory system built in Obsidian. Auto-generates structured knowledge snapshots from live folders using Python. Foundation for AI agent development with real shipping domain context.
+        </p>
+        <div class="project-metric">17 operational modules · AI persona layer (EXECUTIVE_CLONE)</div>
+        <div class="project-links">
+          <a href="https://github.com/fabricionettto-commits/operational-intelligence-architecture" target="_blank">GitHub</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- STACK -->
+<section id="stack" class="stack-section">
+  <div class="section-inner">
+    <div class="section-tag">Technical Stack</div>
+    <h2 class="section-title">Tools &amp; Technologies</h2>
+    <div class="divider"></div>
+
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1.5rem;">Automation &amp; Data</p>
+    <div class="stack-grid" style="margin-bottom:2rem;">
+      <span class="stack-chip highlight">Python</span>
+      <span class="stack-chip highlight">Pandas</span>
+      <span class="stack-chip">SQL</span>
+      <span class="stack-chip">PostgreSQL</span>
+      <span class="stack-chip">Supabase</span>
+      <span class="stack-chip">Power Query</span>
+      <span class="stack-chip">Excel (Advanced)</span>
+      <span class="stack-chip">Windows Task Scheduler</span>
+    </div>
+
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1.5rem;">Visualization &amp; Frontend</p>
+    <div class="stack-grid" style="margin-bottom:2rem;">
+      <span class="stack-chip highlight">HTML / Bootstrap</span>
+      <span class="stack-chip highlight">JavaScript</span>
+      <span class="stack-chip">Three.js</span>
+      <span class="stack-chip">Power BI</span>
+      <span class="stack-chip">Access</span>
+    </div>
+
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1.5rem;">Maritime Domain Knowledge</p>
+    <div class="stack-grid">
+      <span class="stack-chip highlight">BAPLIE / EDI</span>
+      <span class="stack-chip highlight">Capacity Planning</span>
+      <span class="stack-chip">S&amp;OP</span>
+      <span class="stack-chip">Shortfall Analysis</span>
+      <span class="stack-chip">Transshipment Ops</span>
+      <span class="stack-chip">Reefer Management</span>
+      <span class="stack-chip">TDR</span>
+      <span class="stack-chip">Gate-In / Gate-Out</span>
+      <span class="stack-chip">Booking Control</span>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <div class="section-tag">Background</div>
+    <h2 class="section-title">From Operations to Intelligence</h2>
+    <div class="divider"></div>
+
+    <div class="about-grid">
+      <div class="about-text">
+        <p>
+          I spent <strong>15 years inside maritime operations</strong> — managing bookings, coordinating cargo, planning vessel capacity, and making decisions under deadline pressure across Brazilian and South American ports.
+        </p>
+        <p>
+          At some point I stopped accepting that the answer to every operational question was "wait for the next report." I started <strong>building the tools that give you the answer before execution</strong> — dashboards, automation pipelines, and now AI agents that carry operational memory.
+        </p>
+        <p>
+          My advantage is not knowing Python. It's knowing <strong>exactly what question to ask the data</strong> — because I've lived the operation. That context is what most data engineers don't have.
+        </p>
+        <p>
+          Currently building at <strong>Centurion Shipping LLC / Solnave</strong>, managing the LAM (Latin America) service with 3 vessels in rotation.
+        </p>
+      </div>
+
+      <ul class="timeline">
+        <li>
+          <div class="timeline-year">2024–Present</div>
+          <div class="timeline-item">Operations Intelligence Engineer</div>
+          <div class="timeline-company">Centurion Shipping LLC / Solnave</div>
+        </li>
+        <li>
+          <div class="timeline-year">2017–2024</div>
+          <div class="timeline-item">Capacity Planning &amp; Operations Coordinator</div>
+          <div class="timeline-company">Solnave / Hamburg Süd</div>
+        </li>
+        <li>
+          <div class="timeline-year">2010–2017</div>
+          <div class="timeline-item">Commercial &amp; Operations Manager</div>
+          <div class="timeline-company">CLI Shipping (CCO Co-founder)</div>
+        </li>
+        <li>
+          <div class="timeline-year">Education</div>
+          <div class="timeline-item">MBA Supply Chain · MBA Business Intelligence</div>
+          <div class="timeline-company">Six Sigma Green Belt · Copenhagen Business School</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+  <div class="contact-inner">
+    <div class="section-tag" style="text-align:center;">Get in touch</div>
+    <h2 class="section-title">Let's talk operations.</h2>
+    <p style="color:var(--muted);font-size:0.95rem;margin-top:0.5rem;">
+      Open to roles in Operations Intelligence, Maritime Analytics, and Supply Chain Automation — remote or Brazil-based.
+    </p>
+    <div class="contact-links">
+      <a href="mailto:fabricionettto@gmail.com" class="contact-link">
+        ✉ fabricionettto@gmail.com
+      </a>
+      <a href="https://linkedin.com/in/fabricio-neto-pcd" target="_blank" class="contact-link">
+        in LinkedIn
+      </a>
+      <a href="https://github.com/fabricionettto-commits" target="_blank" class="contact-link">
+        ⌥ GitHub
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  © 2026 Fabricio Neto · Operations Intelligence Engineer · São Vicente, Brazil
+</footer>
+
+</body>
+</html>
